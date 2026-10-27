@@ -1,473 +1,339 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080d18">
-  <meta name="description" content="OSINT PRO - pesquisa de fontes públicas">
-  <title>OSINT PRO | Pesquisa Pública</title>
-
-  <style>
-    :root {
-      --bg: #080d18;
-      --panel: #101827;
-      --line: #243248;
-      --text: #e8eef9;
-      --muted: #91a0b8;
-      --blue: #55a7ff;
-      --cyan: #61e7dc;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: radial-gradient(ellipse at top, #142b4b, var(--bg) 60%);
-      color: var(--text);
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 24px;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0 25px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .logo {
-      font-size: 25px;
-      font-weight: 900;
-      letter-spacing: 1px;
-    }
-
-    .logo span {
-      color: var(--cyan);
-    }
-
-    .status {
-      color: #69e5ad;
-      font-size: 12px;
-      border: 1px solid #285e4c;
-      padding: 7px 12px;
-      border-radius: 30px;
-    }
-
-    .hero {
-      padding: 55px 0 30px;
-    }
-
-    .eyebrow {
-      color: var(--cyan);
-      font-size: 12px;
-      letter-spacing: 2px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      font-size: clamp(34px, 6vw, 58px);
-      line-height: 1.1;
-      margin: 15px 0;
-    }
-
-    .gradient {
-      color: var(--blue);
-    }
-
-    .description {
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 680px;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 10px;
-      padding: 10px;
-      margin-top: 25px;
-      background: var(--panel);
-      border: 1px solid #31445f;
-      border-radius: 15px;
-    }
-
-    input {
-      flex: 1;
-      min-width: 0;
-      padding: 14px;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: white;
-      font-size: 16px;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      border-radius: 10px;
-      padding: 13px 18px;
-      font-weight: bold;
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
-      color: #07101c;
-    }
-
-    button:hover {
-      filter: brightness(1.1);
-    }
-
-    .hint {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .section-title {
-      margin: 35px 0 15px;
-      font-size: 22px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .card, .result {
-      background: linear-gradient(180deg, #111b2b, #0d1523);
-      border: 1px solid var(--line);
-      border-radius: 15px;
-      padding: 18px;
-      overflow-wrap: anywhere;
-    }
-
-    .card h3 {
-      margin-top: 0;
-    }
-
-    .card p, .result p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    a {
-      color: var(--blue);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .results {
-      display: grid;
-      gap: 12px;
-    }
-
-    .notice {
-      margin-top: 25px;
-      padding: 16px;
-      border: 1px solid #69552d;
-      background: #241d12;
-      color: #e7d4a9;
-      border-radius: 12px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    footer {
-      margin-top: 40px;
-      padding: 20px 0;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    @media (max-width: 700px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .search-box {
-        flex-wrap: wrap;
-      }
-
-      input {
-        flex-basis: 100%;
-      }
-
-      .search-box button {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 450px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .container {
-        padding: 16px;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b14">
+<meta name="description" content="OSINT PRO MAX+ — workspace de pesquisa responsável em fontes abertas.">
+<title>OSINT PRO MAX+ | Open-source intelligence</title>
+<style>
+:root{
+ --bg:#070b14;--panel:#0d1523;--panel2:#111e30;--panel3:#17263b;--line:#25364d;
+ --text:#edf4ff;--muted:#93a5bd;--blue:#77baff;--cyan:#67f0df;--green:#8aefba;
+ --amber:#f2cf85;--red:#ff8f9c;--radius:18px;--shadow:0 20px 70px #0005
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 10% -8%,#15385a 0,transparent 35%),radial-gradient(ellipse at 98% 25%,#103c3a 0,transparent 27%),var(--bg);color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #67f0df88;outline-offset:3px}
+.shell{max-width:1360px;margin:auto;padding:22px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:7px 0 20px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:950;letter-spacing:.8px;font-size:19px}
+.brandmark{display:grid;place-items:center;width:45px;height:45px;border-radius:15px;background:linear-gradient(140deg,var(--blue),var(--cyan));color:#06111c;font-size:23px;box-shadow:0 8px 28px #56c6ff26}
+.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;font-weight:800}.brand em{font-style:normal;color:var(--cyan)}
+.header-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.pill{border:1px solid #285d50;color:var(--green);background:#102820;border-radius:999px;padding:7px 11px;font-size:11px;font-weight:850}
+.btn{border:1px solid var(--line);border-radius:11px;padding:10px 13px;background:var(--panel3);color:var(--text);font-weight:800;transition:transform .15s,border-color .15s,filter .15s}
+.btn:hover{border-color:#50739b;transform:translateY(-1px)}
+.btn.primary{border:0;background:linear-gradient(130deg,var(--blue),var(--cyan));color:#06111c}
+.btn.ghost{background:transparent}
+.hero{padding:48px 0 24px;max-width:930px}
+.eyebrow{font-size:11px;letter-spacing:2.3px;text-transform:uppercase;color:var(--cyan);font-weight:900}
+h1{font-size:clamp(36px,6vw,66px);line-height:1.03;letter-spacing:-2px;margin:14px 0}
+.shine{background:linear-gradient(95deg,#fff,#83c9ff 48%,#67f0df);background-clip:text;color:transparent}
+.lead{max-width:780px;color:var(--muted);font-size:17px;line-height:1.75;margin:0}
+.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(270px,.75fr);gap:16px;align-items:start}
+.panel{border:1px solid var(--line);background:linear-gradient(155deg,#101b2c,#0b1320);border-radius:var(--radius);padding:19px;box-shadow:0 12px 38px #0002}
+.panel h2,.panel h3{margin:0}
+.panel-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.panel-title p{color:var(--muted);font-size:12px;margin:4px 0 0}
+.searchbox{padding:10px;border:1px solid #344b68;background:#0e1929e8;border-radius:17px;box-shadow:var(--shadow)}
+.searchrow{display:flex;gap:9px}
+.searchrow input{flex:1;min-width:0;background:#080f1b;border:1px solid var(--line);border-radius:12px;padding:15px;color:var(--text)}
+.searchrow input::placeholder{color:#6f819b}
+.searchrow .btn{white-space:nowrap;padding-inline:18px}
+.fieldrow{display:grid;grid-template-columns:1fr 180px;gap:10px;margin-top:10px}
+.fieldrow label,.field-label{display:block;color:var(--muted);font-size:11px;font-weight:800;margin-bottom:5px}
+.fieldrow select,.fieldrow input{width:100%;background:#080f1b;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px}
+.checks{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 4px 2px;color:var(--muted);font-size:12px}
+.checks label{display:flex;align-items:center;gap:6px;cursor:pointer}.checks input{accent-color:var(--cyan)}
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{background:#132239;border:1px solid #263b57;color:#c8d8ee;padding:7px 10px;border-radius:999px;font-size:12px}
+.chip:hover{border-color:var(--blue)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0 0}
+.stat{padding:13px;border:1px solid var(--line);background:#0b1422;border-radius:13px}
+.stat strong{display:block;font-size:19px}.stat span{display:block;color:var(--muted);font-size:11px}
+.side-stack{display:grid;gap:14px}
+.tip{display:flex;gap:11px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#0b1422;margin-top:9px}
+.tip-icon{display:grid;place-items:center;flex:0 0 34px;height:34px;border-radius:10px;background:#193049;color:var(--cyan);font-weight:900}
+.tip strong{display:block;font-size:13px}.tip p{color:var(--muted);font-size:12px;margin:2px 0 0}
+.section{margin-top:34px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 0 14px}
+.section-head h2{font-size:22px;margin:0}.section-head p{font-size:13px;color:var(--muted);margin:4px 0 0}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.card{border:1px solid var(--line);border-radius:16px;padding:16px;background:linear-gradient(155deg,#111d30,#0c1421);min-height:155px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;transition:transform .16s,border-color .16s}
+.card:hover{transform:translateY(-3px);border-color:#42658b}
+.icon{width:37px;height:37px;border-radius:11px;display:grid;place-items:center;background:#1b3049;color:var(--cyan);font-weight:900;font-size:12px}
+.card h3{font-size:15px;margin:0}.card p{font-size:12px;color:var(--muted);margin:0;flex:1}.card a{font-size:12px;font-weight:850}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.result{border:1px solid var(--line);background:#0e1726;border-radius:14px;padding:14px;overflow-wrap:anywhere;display:flex;flex-direction:column;gap:10px}
+.result-head{display:flex;align-items:center;gap:9px}.result .icon{width:34px;height:34px;flex-shrink:0}
+.result strong{display:block;font-size:13px}.result small{display:block;color:var(--muted);font-size:11px}
+.result-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto}
+.result-actions a{font-size:12px;font-weight:850}.result-actions button{font-size:11px;padding:6px 8px}
+.empty{grid-column:1/-1;padding:25px;border:1px dashed #34445b;border-radius:14px;color:var(--muted);text-align:center}
+.history-list{display:grid;gap:8px}.history-item{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#0b1422;border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:12px}.history-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.notice{margin-top:28px;padding:15px 17px;border:1px solid #69552d;background:#241d12;color:#e7d4a9;border-radius:14px;font-size:12px;line-height:1.7}.notice strong{color:#ffdf98}
+footer{margin-top:42px;border-top:1px solid var(--line);padding:20px 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.toast{position:fixed;right:20px;bottom:20px;background:#d6fff2;color:#07151b;border-radius:12px;padding:12px 15px;font-weight:850;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;z-index:10}.toast.show{opacity:1;transform:translateY(0)}
+kbd{font:inherit;font-size:10px;border:1px solid #42536a;border-radius:5px;padding:2px 5px;color:#c4d3e7}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.side-stack{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.shell{padding:14px}.header-right .github{display:none}.hero{padding-top:35px}h1{letter-spacing:-1.2px}.searchrow{flex-wrap:wrap}.searchrow input,.searchrow .btn{width:100%}.fieldrow{grid-template-columns:1fr}.grid,.results,.side-stack{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:10px}.stat strong{font-size:15px}.stat span{font-size:10px}.section-head{align-items:flex-start;flex-direction:column}.panel{padding:14px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
 </head>
-
 <body>
-<div class="container">
+<div class="shell">
+<header>
+  <a class="brand" href="#" aria-label="OSINT PRO MAX+ início">
+    <span class="brandmark" aria-hidden="true">O</span><span>OSINT <em>PRO MAX+</em><small>OPEN-SOURCE RESEARCH WORKSPACE</small></span>
+  </a>
+  <div class="header-right"><span class="pill">● FONTES ABERTAS</span><button class="btn ghost" id="themeBtn" type="button" aria-label="Alternar contraste">◐ Contraste</button><a class="btn github" href="https://github.com/new" target="_blank" rel="noopener noreferrer">↗ Publicar no GitHub</a></div>
+</header>
 
-  <header>
-    <div class="logo">OSINT <span>PRO</span></div>
-    <div class="status">● FONTES PÚBLICAS</div>
-  </header>
+<main>
+<section class="hero">
+  <div class="eyebrow">Pesquisa aberta · contexto · responsabilidade</div>
+  <h1>Uma central melhor.<br><span class="shine">Pesquise com método.</span></h1>
+  <p class="lead">Organize consultas em buscadores, plataformas e fontes públicas. Monte um conjunto de links por termo, exporte a lista e compare os resultados diretamente nas fontes originais.</p>
+</section>
 
-  <main>
-    <section class="hero">
-      <div class="eyebrow">Open Source Intelligence</div>
-
-      <h1>
-        Pesquise com clareza.<br>
-        <span class="gradient">Explore a web pública.</span>
-      </h1>
-
-      <p class="description">
-        Pesquise nomes, apelidos, usernames, projetos e palavras-chave.
-        Acesse fontes públicas por meio de links organizados em um só lugar.
-      </p>
-
-      <form class="search-box" id="searchForm">
-        <input
-          id="term"
-          type="text"
-          maxlength="200"
-          placeholder="Digite um nome, @username ou palavra-chave..."
-          aria-label="Termo de pesquisa"
-          required
-        >
-        <button type="submit">Pesquisar ↗</button>
-      </form>
-
-      <p class="hint">
-        Os resultados são abertos nos sites de origem.
-      </p>
-    </section>
-
-    <h2 class="section-title">Fontes disponíveis</h2>
-
-    <section class="grid">
-      <article class="card">
-        <h3>🌐 Google</h3>
-        <p>Pesquisa geral de páginas públicas.</p>
-        <a href="https://google.com" target="_blank" rel="noopener noreferrer">
-          Abrir Google ↗
-        </a>
-      </article>
-
-      <article class="card">
-        <h3>🔎 Bing</h3>
-        <p>Pesquise e compare resultados da web.</p>
-        <a href="https://bing.com" target="_blank" rel="noopener noreferrer">
-          Abrir Bing ↗
-        </a>
-      </article>
-
-      <article class="card">
-        <h3>🦆 DuckDuckGo</h3>
-        <p>Outra opção para pesquisar conteúdos públicos.</p>
-        <a href="https://duckduckgo.com" target="_blank" rel="noopener noreferrer">
-          Abrir DuckDuckGo ↗
-        </a>
-      </article>
-
-      <article class="card">
-        <h3>💻 GitHub Users</h3>
-        <p>Pesquise perfis públicos de desenvolvedores.</p>
-        <a href="https://github.com/search?type=users" target="_blank" rel="noopener noreferrer">
-          Pesquisar usuários ↗
-        </a>
-      </article>
-
-      <article class="card">
-        <h3>📁 Repositórios</h3>
-        <p>Encontre projetos e códigos públicos.</p>
-        <a href="https://github.com/search?type=repositories" target="_blank" rel="noopener noreferrer">
-          Pesquisar projetos ↗
-        </a>
-      </article>
-
-      <article class="card">
-        <h3>💬 Reddit</h3>
-        <p>Pesquise publicações públicas indexadas.</p>
-        <a href="https://reddit.com" target="_blank" rel="noopener noreferrer">
-          Abrir Reddit ↗
-        </a>
-      </article>
-    </section>
-
-    <h2 class="section-title">Resultados da pesquisa</h2>
-    <p class="hint" id="resultHint">
-      Digite um termo na barra acima para gerar as pesquisas.
-    </p>
-
-    <section class="results" id="results" aria-live="polite">
-      <div class="result">
-        Seus links de pesquisa aparecerão aqui.
+<div class="layout">
+  <section class="panel" aria-labelledby="searchTitle">
+    <div class="panel-title"><div><h2 id="searchTitle">Central de pesquisa</h2><p>Digite um nome, username, domínio, organização ou palavra-chave.</p></div><span class="pill">LOCAL</span></div>
+    <form id="searchForm" class="searchbox">
+      <div class="searchrow">
+        <input id="term" name="term" maxlength="200" autocomplete="off" placeholder="Ex.: @usuario, exemplo.com, projeto open source..." aria-label="Termo de pesquisa" required>
+        <button class="btn primary" type="submit">Gerar pesquisas ↗</button>
       </div>
-    </section>
-
-    <button id="copyBtn" hidden style="margin-top:15px">
-      Copiar todos os links
-    </button>
-
-    <div class="notice">
-      <strong>Uso responsável:</strong>
-      esta ferramenta organiza links para fontes públicas. Ela não acessa
-      contas privadas, não descobre senhas e não confirma que perfis com
-      nomes semelhantes pertencem à mesma pessoa.
+      <div class="fieldrow">
+        <div><label for="mode">Tipo de consulta</label><select id="mode"><option value="general">Pesquisa geral</option><option value="username">Username / apelido</option><option value="domain">Domínio / site</option><option value="github">Desenvolvimento / GitHub</option><option value="documents">Documentos públicos</option><option value="news">Notícias e menções</option></select></div>
+        <div><label for="region">Idioma / região (buscador)</label><select id="region"><option value="">Automático</option><option value="br">Brasil (pt-BR)</option><option value="us">Inglês / internacional</option></select></div>
+      </div>
+      <div class="checks" aria-label="Fontes para incluir">
+        <strong>Incluir:</strong>
+        <label><input type="checkbox" name="source" value="web" checked> Web</label>
+        <label><input type="checkbox" name="source" value="github" checked> GitHub</label>
+        <label><input type="checkbox" name="source" value="social" checked> Plataformas</label>
+        <label><input type="checkbox" name="source" value="docs" checked> Documentos</label>
+        <label><input type="checkbox" name="source" value="news" checked> Notícias</label>
+      </div>
+    </form>
+    <div class="quick" aria-label="Exemplos rápidos">
+      <button class="chip" type="button" data-mode="username" data-term="exemplo_username">Username</button>
+      <button class="chip" type="button" data-mode="github" data-term="projeto open source">Projeto open source</button>
+      <button class="chip" type="button" data-mode="documents" data-term="relatório público">Documentos públicos</button>
+      <button class="chip" type="button" data-mode="domain" data-term="exemplo.com">Domínio</button>
+      <button class="chip" type="button" data-mode="news" data-term="tema de interesse">Notícias</button>
     </div>
-  </main>
+    <div class="stats">
+      <div class="stat"><strong id="linkCount">0</strong><span>links preparados</span></div>
+      <div class="stat"><strong id="sourceCount">5</strong><span>categorias disponíveis</span></div>
+      <div class="stat"><strong>100%</strong><span>consultas no navegador</span></div>
+    </div>
+  </section>
 
-  <footer>
-    OSINT PRO · Pesquisa de fontes públicas ·
-    <span id="year"></span>
-  </footer>
+  <aside class="side-stack">
+    <section class="panel">
+      <div class="panel-title"><div><h3>Fluxo recomendado</h3><p>Uma rotina simples para melhorar a qualidade da pesquisa.</p></div></div>
+      <div class="tip"><span class="tip-icon">01</span><div><strong>Defina o contexto</strong><p>Registre grafias, aliases e palavras relacionadas sem presumir que sejam a mesma pessoa.</p></div></div>
+      <div class="tip"><span class="tip-icon">02</span><div><strong>Compare fontes</strong><p>Confirme cada achado na página original e procure uma segunda fonte independente.</p></div></div>
+      <div class="tip"><span class="tip-icon">03</span><div><strong>Documente a evidência</strong><p>Guarde URL, data da consulta e o motivo pelo qual o resultado é relevante.</p></div></div>
+    </section>
+    <section class="panel">
+      <div class="panel-title"><div><h3>Histórico desta sessão</h3><p>Termos recentes ficam apenas nesta aba e desaparecem ao recarregar.</p></div><button class="btn ghost" id="clearHistory" type="button">Limpar</button></div>
+      <div class="history-list" id="history"><div class="empty">Nenhuma pesquisa nesta sessão.</div></div>
+    </section>
+  </aside>
 </div>
 
+<section class="section">
+  <div class="section-head"><div><h2>Fontes rápidas</h2><p>Abra serviços conhecidos sem gerar uma consulta específica.</p></div></div>
+  <div class="grid">
+    <article class="card"><div class="icon">G</div><h3>Google Search</h3><p>Páginas públicas indexadas na web.</p><a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">Abrir Google ↗</a></article>
+    <article class="card"><div class="icon">B</div><h3>Bing Search</h3><p>Buscador alternativo para comparar resultados.</p><a href="https://www.bing.com/" target="_blank" rel="noopener noreferrer">Abrir Bing ↗</a></article>
+    <article class="card"><div class="icon">D</div><h3>DuckDuckGo</h3><p>Outra opção para pesquisas abertas.</p><a href="https://duckduckgo.com/" target="_blank" rel="noopener noreferrer">Abrir DuckDuckGo ↗</a></article>
+    <article class="card"><div class="icon">GH</div><h3>GitHub</h3><p>Contas, código e repositórios públicos.</p><a href="https://github.com/search" target="_blank" rel="noopener noreferrer">Explorar GitHub ↗</a></article>
+    <article class="card"><div class="icon">YT</div><h3>YouTube</h3><p>Vídeos e canais disponíveis publicamente.</p><a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">Abrir YouTube ↗</a></article>
+    <article class="card"><div class="icon">PDF</div><h3>Internet Archive</h3><p>Materiais digitais e páginas arquivadas disponíveis ao público.</p><a href="https://archive.org/" target="_blank" rel="noopener noreferrer">Abrir Archive ↗</a></article>
+  </div>
+</section>
+
+<section class="section" id="resultsSection">
+  <div class="section-head">
+    <div><h2>Consultas geradas</h2><p id="resultHint">Preencha o campo acima e gere seus links. Os resultados são abertos nos sites de origem.</p></div>
+    <div class="toolbar"><button class="btn" id="copyBtn" type="button" disabled>Copiar lista</button><button class="btn" id="exportBtn" type="button" disabled>Exportar JSON</button><button class="btn" id="clearBtn" type="button">Limpar</button></div>
+  </div>
+  <div class="results" id="results" aria-live="polite"><div class="empty">Pronto para iniciar uma pesquisa.</div></div>
+</section>
+
+<div class="notice"><strong>Uso responsável:</strong> esta ferramenta prepara links para serviços externos; não faz scraping, não confirma identidades e não acessa contas privadas. Resultados podem estar desatualizados ou corresponder a outra pessoa. Não use para assédio, perseguição, discriminação ou decisões importantes sem verificação adequada. Respeite as leis e os termos de cada serviço.</div>
+</main>
+<footer><span>© <span id="year"></span> OSINT PRO MAX+ · Workspace de fontes abertas</span><span>Estático · sem servidor · sem coleta própria de dados</span></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-  const form = document.getElementById("searchForm");
-  const termInput = document.getElementById("term");
-  const results = document.getElementById("results");
-  const resultHint = document.getElementById("resultHint");
-  const copyBtn = document.getElementById("copyBtn");
+"use strict";
+const $ = (selector, root=document) => root.querySelector(selector);
+const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
+const form = $("#searchForm"), termInput = $("#term"), results = $("#results");
+const resultHint = $("#resultHint"), copyBtn = $("#copyBtn"), exportBtn = $("#exportBtn");
+const toast = $("#toast");
+let currentLinks = [], sessionHistory = [], toastTimer;
 
-  let currentLinks = [];
+const enc = value => encodeURIComponent(value);
+const google = query => `https://www.google.com/search?q=${enc(query)}`;
+const bing = query => `https://www.bing.com/search?q=${enc(query)}`;
+const ddg = query => `https://duckduckgo.com/?q=${enc(query)}`;
+const github = (query,type) => `https://github.com/search?q=${enc(query)}&type=${type}`;
+const safeText = value => String(value ?? "").trim();
 
-  function buildLinks(term) {
-    const q = encodeURIComponent(term);
-
-    function googleSearch(query) {
-      return "https://www.google.com/search?q=" +
-        encodeURIComponent(query);
-    }
-
-    return [
-      {
-        name: "Google",
-        description: "Pesquisa geral",
-        url: "https://www.google.com/search?q=" + q
-      },
-      {
-        name: "Bing",
-        description: "Pesquisa alternativa",
-        url: "https://www.bing.com/search?q=" + q
-      },
-      {
-        name: "DuckDuckGo",
-        description: "Pesquisa na web",
-        url: "https://duckduckgo.com/?q=" + q
-      },
-      {
-        name: "GitHub — Usuários",
-        description: "Perfis públicos",
-        url: "https://github.com/search?q=" + q + "&type=users"
-      },
-      {
-        name: "GitHub — Repositórios",
-        description: "Projetos públicos",
-        url: "https://github.com/search?q=" + q + "&type=repositories"
-      },
-      {
-        name: "Reddit público",
-        description: "Páginas públicas indexadas",
-        url: googleSearch("site:reddit.com " + term)
-      },
-      {
-        name: "Documentos PDF",
-        description: "Documentos públicos indexados",
-        url: googleSearch(term + " filetype:pdf")
-      }
-    ];
+function notify(message){
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toast.classList.remove("show"),2300);
+}
+function selectedSources(){
+  return new Set($$('input[name="source"]:checked').map(input=>input.value));
+}
+function queryForMode(term, mode){
+  const clean = term.trim();
+  switch(mode){
+    case "username": return `"${clean.replace(/^@/,"")}"`;
+    case "domain": return `site:${clean.replace(/^https?:\/\//,"").replace(/\/.*$/,"")}`;
+    case "github": return clean;
+    case "documents": return `${clean} filetype:pdf`;
+    case "news": return `${clean} notícias OR reportagem`;
+    default: return clean;
   }
-
-  function renderResults(links) {
-    results.replaceChildren();
-
-    links.forEach(item => {
-      const card = document.createElement("article");
-      card.className = "result";
-
-      const title = document.createElement("strong");
-      title.textContent = item.name;
-
-      const description = document.createElement("p");
-      description.textContent = item.description;
-
-      const link = document.createElement("a");
-      link.href = item.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = "Abrir pesquisa ↗";
-
-      card.append(title, description, link);
-      results.appendChild(card);
-    });
-
-    resultHint.textContent =
-      links.length + " links preparados para pesquisa.";
-
-    copyBtn.hidden = false;
+}
+function buildLinks(term, selected, mode, region){
+  const base = queryForMode(term, mode);
+  const items = [];
+  const regionSuffix = region === "br" ? "&hl=pt-BR&gl=BR" : region === "us" ? "&hl=en&gl=US" : "";
+  const add = (name, icon, description, url, category) => items.push({name,icon,description,url,category});
+  if(selected.has("web")){
+    add("Google", "G", "Busca geral com o contexto selecionado", google(base)+regionSuffix, "Web");
+    add("Bing", "B", "Busca alternativa para comparação", bing(base), "Web");
+    add("DuckDuckGo", "D", "Outra visão dos resultados indexados", ddg(base), "Web");
   }
-
-  form.addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    const term = termInput.value.trim();
-
-    if (!term) {
-      resultHint.textContent = "Digite um termo para pesquisar.";
-      return;
+  if(selected.has("github")){
+    add("GitHub — usuários", "GH", "Perfis públicos que correspondam ao termo", github(term.replace(/^@/,""),"users"), "GitHub");
+    add("GitHub — repositórios", "{ }", "Projetos e repositórios públicos", github(term,"repositories"), "GitHub");
+    add("GitHub — código", "</>", "Trechos de código indexados pelo GitHub", github(term,"code"), "GitHub");
+  }
+  if(selected.has("social")){
+    const userTerm = term.replace(/^@/,"");
+    add("Reddit", "R", "Publicações públicas relacionadas", google(`site:reddit.com ${base}`), "Plataformas");
+    add("YouTube", "YT", "Vídeos e canais relacionados", `https://www.youtube.com/results?search_query=${enc(term)}`, "Plataformas");
+    add("Mastodon (busca web)", "M", "Páginas públicas indexadas relacionadas", google(`${userTerm} site:mastodon.social OR site:fosstodon.org`), "Plataformas");
+  }
+  if(selected.has("docs")){
+    add("PDFs públicos", "PDF", "Documentos PDF indexados", google(`${base} filetype:pdf`), "Documentos");
+    add("Portais gov.br", "BR", "Documentos públicos em domínios gov.br", google(`${base} site:gov.br filetype:pdf`), "Documentos");
+    add("Universidades", "EDU", "Materiais em domínios acadêmicos", google(`${base} site:edu.br OR site:ac.uk filetype:pdf`), "Documentos");
+    add("Internet Archive", "IA", "Busca no acervo público", `https://archive.org/search?query=${enc(term)}`, "Documentos");
+  }
+  if(selected.has("news")){
+    add("Google Notícias", "N", "Notícias relacionadas ao termo", `https://news.google.com/search?q=${enc(term)}${region==="br"?"&hl=pt-BR&gl=BR&ceid=BR%3Apt-419":""}`, "Notícias");
+    add("Bing Notícias", "BN", "Cobertura em outro buscador", `https://www.bing.com/news/search?q=${enc(term)}`, "Notícias");
+  }
+  return items;
+}
+function renderLinks(items){
+  results.replaceChildren();
+  if(!items.length){
+    const empty=document.createElement("div");empty.className="empty";
+    empty.textContent="Nenhuma fonte selecionada. Marque ao menos uma categoria.";
+    results.append(empty); resultHint.textContent="Selecione uma ou mais categorias.";
+    copyBtn.disabled=exportBtn.disabled=true; $("#linkCount").textContent="0"; return;
+  }
+  const fragment=document.createDocumentFragment();
+  for(const item of items){
+    const article=document.createElement("article");article.className="result";
+    const head=document.createElement("div");head.className="result-head";
+    const icon=document.createElement("div");icon.className="icon";icon.textContent=item.icon;icon.setAttribute("aria-hidden","true");
+    const titleWrap=document.createElement("div");
+    const title=document.createElement("strong");title.textContent=item.name;
+    const meta=document.createElement("small");meta.textContent=`${item.category} · ${item.description}`;
+    titleWrap.append(title,meta);head.append(icon,titleWrap);
+    const actions=document.createElement("div");actions.className="result-actions";
+    const link=document.createElement("a");link.href=item.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Abrir pesquisa ↗";
+    const copy=document.createElement("button");copy.className="btn";copy.type="button";copy.textContent="Copiar URL";
+    copy.addEventListener("click",()=>copyText(item.url,"URL copiada."));
+    actions.append(link,copy);article.append(head,actions);fragment.append(article);
+  }
+  results.append(fragment);
+  resultHint.textContent=`${items.length} consultas preparadas. Abra os links para ver os resultados nas plataformas originais.`;
+  $("#linkCount").textContent=String(items.length);copyBtn.disabled=exportBtn.disabled=false;
+}
+async function copyText(text,message){
+  try{
+    if(navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+    else{
+      const area=document.createElement("textarea");area.value=text;area.style.position="fixed";area.style.opacity="0";document.body.append(area);area.select();
+      const ok=document.execCommand("copy");area.remove();if(!ok)throw new Error("copy failed");
     }
-
-    if (term.length > 200) {
-      resultHint.textContent = "O termo deve ter no máximo 200 caracteres.";
-      return;
-    }
-
-    currentLinks = buildLinks(term);
-    renderResults(currentLinks);
+    notify(message);
+  }catch{notify("Não foi possível copiar automaticamente neste navegador.");}
+}
+function addHistory(term, count){
+  sessionHistory=[{term,count,time:new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})},...sessionHistory.filter(item=>item.term!==term)].slice(0,6);
+  renderHistory();
+}
+function renderHistory(){
+  const history=$("#history");history.replaceChildren();
+  if(!sessionHistory.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Nenhuma pesquisa nesta sessão.";history.append(empty);return;}
+  sessionHistory.forEach(item=>{
+    const row=document.createElement("div");row.className="history-item";
+    const label=document.createElement("span");label.textContent=`${item.term} · ${item.time}`;
+    const button=document.createElement("button");button.className="btn";button.type="button";button.textContent="Repetir";
+    button.addEventListener("click",()=>{termInput.value=item.term;form.requestSubmit();$("#resultsSection").scrollIntoView({behavior:"smooth"});});
+    row.append(label,button);history.append(row);
   });
-
-  copyBtn.addEventListener("click", async function() {
-    const text = currentLinks
-      .map(item => item.name + ": " + item.url)
-      .join("\n");
-
-    try {
-      await navigator.clipboard.writeText(text);
-      copyBtn.textContent = "Links copiados ✓";
-    } catch {
-      const blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "osint-links.txt";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  });
-
-  document.getElementById("year").textContent =
-    new Date().getFullYear();
+}
+form.addEventListener("submit",event=>{
+  event.preventDefault();
+  const term=safeText(termInput.value);
+  if(!term){termInput.focus();notify("Digite um termo para pesquisar.");return;}
+  const sources=selectedSources();
+  currentLinks=buildLinks(term,sources,$("#mode").value,$("#region").value);
+  renderLinks(currentLinks);addHistory(term,currentLinks.length);
+  $("#resultsSection").scrollIntoView({behavior:"smooth",block:"start"});
+});
+$$("[data-term]").forEach(button=>button.addEventListener("click",()=>{
+  termInput.value=button.dataset.term;$("#mode").value=button.dataset.mode;termInput.focus();
+}));
+copyBtn.addEventListener("click",()=>copyText(currentLinks.map(item=>`${item.name} [${item.category}]\n${item.url}`).join("\n\n"),"Lista de links copiada."));
+exportBtn.addEventListener("click",()=>{
+  const data={tool:"OSINT PRO MAX+",generatedAt:new Date().toISOString(),term:termInput.value.trim(),note:"Links de pesquisa; não são resultados verificados.",links:currentLinks};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="osint-pro-pesquisa.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify("Arquivo JSON exportado.");
+});
+$("#clearBtn").addEventListener("click",()=>{
+  termInput.value="";currentLinks=[];renderLinks([]);
+  const empty=document.createElement("div");empty.className="empty";empty.textContent="Pronto para iniciar uma pesquisa.";results.replaceChildren(empty);
+  resultHint.textContent="Preencha o campo acima e gere seus links. Os resultados são abertos nos sites de origem.";
+  $("#linkCount").textContent="0";copyBtn.disabled=exportBtn.disabled=true;termInput.focus();
+});
+$("#clearHistory").addEventListener("click",()=>{sessionHistory=[];renderHistory();notify("Histórico da sessão limpo.");});
+$("#themeBtn").addEventListener("click",()=>{
+  const high=document.body.dataset.contrast!=="high";
+  document.body.dataset.contrast=high?"high":"";
+  document.documentElement.style.setProperty("--muted",high?"#c0cddd":"#93a5bd");
+  document.documentElement.style.setProperty("--line",high?"#526781":"#25364d");
+  $("#themeBtn").textContent=high?"◑ Contraste normal":"◐ Contraste";
+});
+document.addEventListener("keydown",event=>{
+  if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();termInput.focus();}
+  if(event.key==="Escape" && document.activeElement===termInput)termInput.value="";
+});
+$("#year").textContent=String(new Date().getFullYear());
 </script>
 </body>
 </html>
