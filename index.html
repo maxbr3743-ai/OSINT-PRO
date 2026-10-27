@@ -1,844 +1,172 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080d18">
-<meta name="description" content="OSINT PRO ULTRA — pesquisas responsáveis em fontes abertas.">
+<meta name="description" content="OSINT PRO ULTRA — central de pesquisas responsáveis em fontes abertas.">
 <title>OSINT PRO ULTRA | Pesquisa em fontes abertas</title>
 <style>
-:root {
-  color-scheme: dark;
-  --bg:#070b13; --surface:#0d1422; --surface2:#111c2e;
-  --surface3:#18263b; --line:#293950; --text:#eff5ff;
-  --muted:#98a9c1; --blue:#8dc8ff; --cyan:#62f1dc;
-  --green:#8ef0b8; --amber:#ffdb91; --radius:20px;
-}
-* { box-sizing:border-box }
-html { scroll-behavior:smooth; scroll-padding-top:20px }
-body {
-  margin:0; min-height:100vh;
-  background:radial-gradient(ellipse at 12% -12%,#15375a99,transparent 38%),
-  radial-gradient(ellipse at 100% 14%,#0d514a45,transparent 32%),var(--bg);
-  color:var(--text);
-  font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
-}
-body.light {
-  color-scheme:light;
-  --bg:#edf3fa; --surface:#fff; --surface2:#f6f9fd;
-  --surface3:#e8f0fa; --line:#cbd8e8; --text:#132033;
-  --muted:#52647b; --blue:#145da0; --cyan:#087e77;
-  --green:#147844; --amber:#805d0a;
-  background:radial-gradient(ellipse at 12% -12%,#b6dbff,transparent 38%),var(--bg);
-}
-a { color:var(--blue); text-decoration:none }
-a:hover { text-decoration:underline }
-button,input,select,textarea { font:inherit }
-button { cursor:pointer }
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible {
-  outline:3px solid #62f1dc99; outline-offset:3px;
-}
-.shell { max-width:1450px; margin:auto; padding:22px }
-header {
-  display:flex; align-items:center; justify-content:space-between;
-  gap:16px; border-bottom:1px solid var(--line); padding:4px 0 19px;
-}
-.brand {
-  display:flex; align-items:center; gap:12px; color:var(--text);
-  font-weight:1000; letter-spacing:.5px; font-size:18px;
-}
-.brand:hover { text-decoration:none }
-.brandmark {
-  width:47px; height:47px; display:grid; place-items:center;
-  border-radius:16px; color:#06121b;
-  background:linear-gradient(140deg,var(--blue),var(--cyan));
-  font-size:22px;
-}
-.brand em { font-style:normal; color:var(--cyan) }
-.brand small {
-  display:block; color:var(--muted); font-size:9px;
-  letter-spacing:2px; font-weight:800;
-}
-.header-actions,.toolbar {
-  display:flex; align-items:center; justify-content:flex-end;
-  gap:8px; flex-wrap:wrap;
-}
-.status {
-  border:1px solid #28634e; background:#10271f; color:var(--green);
-  border-radius:999px; padding:7px 11px; font-size:11px; font-weight:900;
-}
-.btn {
-  display:inline-flex; align-items:center; justify-content:center; gap:7px;
-  border:1px solid var(--line); border-radius:12px; padding:10px 13px;
-  background:var(--surface3); color:var(--text); font-weight:800;
-  transition:transform .15s,border-color .15s;
-}
-.btn:hover { transform:translateY(-1px); border-color:var(--blue) }
-.btn.primary {
-  background:linear-gradient(130deg,var(--blue),var(--cyan));
-  color:#06121b; border:0;
-}
-.btn.ghost { background:transparent }
-.btn:disabled { opacity:.45; cursor:not-allowed; transform:none }
-.hero { padding:48px 0 25px; max-width:1000px }
-.eyebrow {
-  display:flex; align-items:center; gap:9px; text-transform:uppercase;
-  letter-spacing:2.2px; font-size:11px; color:var(--cyan); font-weight:950;
-}
-.pulse {
-  width:8px; height:8px; background:var(--green); border-radius:50%;
-  box-shadow:0 0 0 5px #8ef0b81b;
-}
-h1 { font-size:clamp(38px,6.4vw,76px); line-height:1.01; letter-spacing:-2.7px; margin:16px 0 }
-.gradient {
-  background:linear-gradient(95deg,var(--text),var(--blue) 52%,var(--cyan));
-  background-clip:text; color:transparent;
-}
-.lead { max-width:820px; color:var(--muted); font-size:17px; line-height:1.8; margin:0 }
-.hero-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px }
-.hero-tags span {
-  font-size:11px; border:1px solid var(--line); border-radius:999px;
-  padding:6px 10px; background:var(--surface); color:var(--muted);
-}
-.main-grid {
-  display:grid; grid-template-columns:minmax(0,1.7fr) minmax(280px,.7fr);
-  gap:16px; align-items:start;
-}
-.panel {
-  border:1px solid var(--line);
-  background:linear-gradient(155deg,var(--surface2),var(--surface));
-  border-radius:var(--radius); padding:19px; min-width:0;
-}
-.panel-heading {
-  display:flex; justify-content:space-between; align-items:flex-start;
-  gap:12px; margin-bottom:15px;
-}
-.panel-heading h2,.panel-heading h3 { margin:0; font-size:18px; letter-spacing:-.3px }
-.panel-heading p { margin:4px 0 0; color:var(--muted); font-size:12px }
-.mini-label { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--cyan); font-weight:900 }
-.search-form { padding:10px; background:var(--surface); border:1px solid var(--line); border-radius:17px }
-.search-row { display:flex; gap:9px }
-input,select {
-  width:100%; min-width:0; color:var(--text); background:var(--bg);
-  border:1px solid var(--line); border-radius:11px; padding:12px;
-}
-textarea { color:var(--text); background:var(--bg); border:1px solid var(--line); border-radius:11px; padding:12px }
-input::placeholder,textarea::placeholder { color:var(--muted); opacity:.75 }
-.search-row input { flex:1; padding:15px }
-.search-row .btn { white-space:nowrap; padding-inline:18px }
-.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:11px }
-.field label { display:block; color:var(--muted); font-size:11px; font-weight:850; margin:0 0 5px }
-.field select { padding:10px }
-.filters {
-  display:flex; align-items:center; gap:11px; flex-wrap:wrap;
-  padding:13px 3px 2px; color:var(--muted); font-size:12px;
-}
-.filters strong { color:var(--text) }
-.filters label { display:flex; align-items:center; gap:5px; cursor:pointer }
-input[type=checkbox] { width:auto; accent-color:var(--cyan) }
-.quick { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px }
-.chip {
-  border:1px solid var(--line); background:var(--surface3); color:var(--text);
-  border-radius:999px; padding:7px 10px; font-size:12px;
-}
-.chip:hover { border-color:var(--cyan) }
-.metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; margin-top:15px }
-.metric { padding:12px; border:1px solid var(--line); background:var(--surface); border-radius:13px }
-.metric strong { display:block; font-size:21px; letter-spacing:-.5px }
-.metric span { display:block; color:var(--muted); font-size:11px }
-.side { display:grid; gap:14px }
-.step {
-  display:flex; gap:11px; margin-top:11px; padding:11px;
-  border:1px solid var(--line); background:var(--surface); border-radius:13px;
-}
-.step-num {
-  flex:0 0 35px; height:35px; display:grid; place-items:center;
-  border-radius:11px; background:var(--surface3); color:var(--cyan); font-weight:950;
-}
-.step strong { font-size:13px; display:block }
-.step p { margin:2px 0 0; color:var(--muted); font-size:12px }
-.history-list { display:grid; gap:8px }
-.history-item {
-  display:flex; align-items:center; justify-content:space-between; gap:9px;
-  border:1px solid var(--line); background:var(--surface); border-radius:11px; padding:9px;
-}
-.history-item span {
-  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  color:var(--muted); font-size:12px;
-}
-.history-item .btn { padding:6px 8px; font-size:11px; flex-shrink:0 }
-.section { margin-top:34px }
-.section-heading {
-  display:flex; align-items:flex-end; justify-content:space-between;
-  gap:12px; margin-bottom:14px;
-}
-.section-heading h2 { margin:0; font-size:23px; letter-spacing:-.5px }
-.section-heading p { margin:4px 0 0; color:var(--muted); font-size:13px }
-.resource-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px }
-.resource {
-  display:flex; flex-direction:column; align-items:flex-start; gap:8px;
-  min-height:170px; padding:16px; border:1px solid var(--line);
-  border-radius:16px; background:linear-gradient(155deg,var(--surface2),var(--surface));
-  transition:transform .16s,border-color .16s;
-}
-.resource:hover { transform:translateY(-3px); border-color:var(--blue) }
-.resource-icon {
-  width:38px; height:38px; display:grid; place-items:center;
-  border-radius:12px; background:var(--surface3); color:var(--cyan);
-  font-weight:950; font-size:12px;
-}
-.resource h3 { font-size:14px; margin:0 }
-.resource p { font-size:12px; color:var(--muted); margin:0; flex:1 }
-.resource a { font-size:12px; font-weight:900 }
-.results { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px }
-.result {
-  display:flex; flex-direction:column; gap:12px; min-width:0;
-  border:1px solid var(--line); background:var(--surface);
-  border-radius:15px; padding:14px;
-}
-.result-top { display:flex; align-items:center; gap:10px }
-.result-title { min-width:0 }
-.result-title strong { display:block; font-size:13px }
-.result-title small { display:block; color:var(--muted); font-size:11px; margin-top:2px }
-.result-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:auto }
-.result-actions a { font-size:12px; font-weight:900 }
-.result-actions .btn { padding:6px 8px; font-size:11px }
-.empty {
-  grid-column:1/-1; border:1px dashed var(--line); border-radius:14px;
-  text-align:center; padding:25px; color:var(--muted); font-size:13px;
-}
-.checkitem { width:auto!important; accent-color:var(--cyan); margin-right:7px }
-.notice {
-  margin-top:29px; padding:15px 17px; border:1px solid #6b572d;
-  background:#282012; color:#e8d6ac; border-radius:14px; font-size:12px; line-height:1.75;
-}
-.notice strong { color:var(--amber) }
-body.light .notice { background:#fff8e8; color:#644b15 }
-footer {
-  display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
-  border-top:1px solid var(--line); margin-top:42px; padding:20px 0;
-  color:var(--muted); font-size:12px;
-}
-.toast {
-  position:fixed; right:20px; bottom:20px; z-index:5;
-  max-width:min(420px,calc(100vw - 40px)); padding:12px 15px;
-  border-radius:12px; background:var(--cyan); color:#06121b;
-  font-weight:900; opacity:0; transform:translateY(10px);
-  pointer-events:none; transition:.2s;
-}
-.toast.show { opacity:1; transform:translateY(0) }
-kbd { border:1px solid var(--line); border-radius:5px; padding:2px 5px; font-size:10px; color:var(--muted) }
-@media(max-width:1000px) {
-  .main-grid { grid-template-columns:1fr }
-  .side { grid-template-columns:repeat(2,minmax(0,1fr)) }
-  .resource-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
-}
-@media(max-width:650px) {
-  .shell { padding:13px }
-  .header-actions .status,.header-actions .github { display:none }
-  .hero { padding-top:35px }
-  h1 { letter-spacing:-1.4px }
-  .lead { font-size:15px }
-  .search-row { flex-wrap:wrap }
-  .search-row input,.search-row .btn { width:100% }
-  .form-grid,.results,.side,.resource-grid { grid-template-columns:1fr }
-  .panel { padding:14px }
-  .section-heading { align-items:flex-start; flex-direction:column }
-  .metrics { gap:6px }
-  .metric { padding:9px }
-  .metric strong { font-size:17px }
-  .metric span { font-size:10px }
-}
-@media(prefers-reduced-motion:reduce) {
-  *,*::before,*::after { scroll-behavior:auto!important; transition:none!important }
-}
+:root{color-scheme:dark;--bg:#070b13;--surface:#0d1422;--surface2:#111c2e;--surface3:#18263b;--line:#293950;--text:#eff5ff;--muted:#98a9c1;--blue:#8dc8ff;--cyan:#62f1dc;--green:#8ef0b8;--amber:#ffdb91;--radius:20px;--shadow:0 24px 80px #0005}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% -12%,#15375a99,transparent 38%),radial-gradient(ellipse at 100% 14%,#0d514a45,transparent 32%),var(--bg);color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body.light{color-scheme:light;--bg:#edf3fa;--surface:#fff;--surface2:#f6f9fd;--surface3:#e8f0fa;--line:#cbd8e8;--text:#132033;--muted:#52647b;--blue:#145da0;--cyan:#087e77;--green:#147844;--amber:#805d0a;--shadow:0 20px 60px #19324a12;background:radial-gradient(ellipse at 12% -12%,#b6dbff,transparent 38%),var(--bg)}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #62f1dc99;outline-offset:3px}
+.shell{max-width:1450px;margin:auto;padding:22px}header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding:4px 0 19px}
+.brand{display:flex;align-items:center;gap:12px;color:var(--text);font-weight:1000;letter-spacing:.5px;font-size:18px}.brand:hover{text-decoration:none}.brandmark{width:47px;height:47px;display:grid;place-items:center;border-radius:16px;color:#06121b;background:linear-gradient(140deg,var(--blue),var(--cyan));font-size:22px;box-shadow:0 8px 30px #58caff20}.brand em{font-style:normal;color:var(--cyan)}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:2px;font-weight:800}
+.theme-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.theme-tools input[type=color]{width:38px;height:38px;padding:3px;border-radius:10px;cursor:pointer}.theme-tools select{width:auto;max-width:150px;padding:9px}.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.status{border:1px solid #28634e;background:#10271f;color:var(--green);border-radius:999px;padding:7px 11px;font-size:11px;font-weight:900}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:var(--surface3);color:var(--text);font-weight:800;transition:transform .15s,border-color .15s}.btn:hover{transform:translateY(-1px);border-color:var(--blue)}.btn.primary{background:linear-gradient(130deg,var(--blue),var(--cyan));color:#06121b;border:0}.btn.ghost{background:transparent}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.hero{padding:48px 0 25px;max-width:1000px}.eyebrow{display:flex;align-items:center;gap:9px;text-transform:uppercase;letter-spacing:2.2px;font-size:11px;color:var(--cyan);font-weight:950}.pulse{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 0 5px #8ef0b81b}
+h1{font-size:clamp(38px,6.4vw,76px);line-height:1.01;letter-spacing:-2.7px;margin:16px 0}.gradient{background:linear-gradient(95deg,var(--text),var(--blue) 52%,var(--cyan));background-clip:text;color:transparent}.lead{max-width:820px;color:var(--muted);font-size:17px;line-height:1.8;margin:0}.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.hero-tags span{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:var(--surface);color:var(--muted)}
+.main-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,.7fr);gap:16px;align-items:start}.panel{border:1px solid var(--line);background:linear-gradient(155deg,var(--surface2),var(--surface));border-radius:var(--radius);padding:19px;box-shadow:0 12px 38px #00000010;min-width:0}.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:15px}.panel-heading h2,.panel-heading h3{margin:0;font-size:18px;letter-spacing:-.3px}.panel-heading p{margin:4px 0 0;color:var(--muted);font-size:12px}.mini-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);font-weight:900}
+.search-form{padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:17px}.search-row{display:flex;gap:9px}input,select{width:100%;min-width:0;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:12px}input::placeholder{color:var(--muted);opacity:.75}.search-row input{flex:1;padding:15px}.search-row .btn{white-space:nowrap;padding-inline:18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}.field label{display:block;color:var(--muted);font-size:11px;font-weight:850;margin:0 0 5px}.field select{padding:10px}
+.filters{display:flex;align-items:center;gap:11px;flex-wrap:wrap;padding:13px 3px 2px;color:var(--muted);font-size:12px}.filters strong{color:var(--text)}.filters label{display:flex;align-items:center;gap:5px;cursor:pointer}input[type=checkbox]{width:auto;accent-color:var(--cyan)}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.chip{border:1px solid var(--line);background:var(--surface3);color:var(--text);border-radius:999px;padding:7px 10px;font-size:12px}.chip:hover{border-color:var(--cyan)}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:15px}.metric{padding:12px;border:1px solid var(--line);background:var(--surface);border-radius:13px}.metric strong{display:block;font-size:21px;letter-spacing:-.5px}.metric span{display:block;color:var(--muted);font-size:11px}
+.side{display:grid;gap:14px}.step{display:flex;gap:11px;margin-top:11px;padding:11px;border:1px solid var(--line);background:var(--surface);border-radius:13px}.step-num{flex:0 0 35px;height:35px;display:grid;place-items:center;border-radius:11px;background:var(--surface3);color:var(--cyan);font-weight:950}.step strong{font-size:13px;display:block}.step p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.history-list{display:grid;gap:8px}.history-item{display:flex;align-items:center;justify-content:space-between;gap:9px;border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:9px}.history-item span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:12px}.history-item .btn{padding:6px 8px;font-size:11px;flex-shrink:0}
+.section{margin-top:34px}.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}.section-heading h2{margin:0;font-size:23px;letter-spacing:-.5px}.section-heading p{margin:4px 0 0;color:var(--muted);font-size:13px}.toolbar{display:flex;gap:7px;flex-wrap:wrap}
+.resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.resource{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-height:157px;padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(155deg,var(--surface2),var(--surface));transition:transform .16s,border-color .16s}.resource:hover{transform:translateY(-3px);border-color:var(--blue)}.resource-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:var(--surface3);color:var(--cyan);font-weight:950;font-size:12px}.resource h3{font-size:14px;margin:0}.resource p{font-size:12px;color:var(--muted);margin:0;flex:1}.resource a{font-size:12px;font-weight:900}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.result{display:flex;flex-direction:column;gap:12px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:15px;padding:14px}.result-top{display:flex;align-items:center;gap:10px}.result-title{min-width:0}.result-title strong{display:block;font-size:13px}.result-title small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.result-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto}.result-actions a{font-size:12px;font-weight:900}.result-actions .btn{padding:6px 8px;font-size:11px}
+.empty{grid-column:1/-1;border:1px dashed var(--line);border-radius:14px;text-align:center;padding:25px;color:var(--muted);font-size:13px}.resource-grid .resource{min-height:170px}.checkitem{width:auto!important;accent-color:var(--cyan);margin-right:7px}.panel textarea:focus{outline:3px solid #62f1dc55;outline-offset:2px}.notice{margin-top:29px;padding:15px 17px;border:1px solid #6b572d;background:#282012;color:#e8d6ac;border-radius:14px;font-size:12px;line-height:1.75}.notice strong{color:var(--amber)}body.light .notice{background:#fff8e8;color:#644b15}
+.legal-gate{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:#030712eF;backdrop-filter:blur(14px)}.legal-gate.hidden{display:none}.legal-card{width:min(580px,100%);padding:28px;border:1px solid var(--line);border-top:4px solid #ff6b7a;border-radius:24px;background:var(--surface);color:var(--text);box-shadow:0 30px 100px #0009}.legal-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:#ff6b7a1c;color:#ff6b7a;font-size:25px}.legal-card h2{font-size:30px;margin:6px 0 12px}.legal-card p{color:var(--muted);line-height:1.75}.legal-check{display:flex;align-items:flex-start;gap:10px;margin:18px 0;font-size:13px}.legal-check input{margin-top:4px}.legal-card .btn{width:100%;padding:13px}footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:42px;padding:20px 0;color:var(--muted);font-size:12px}.toast{position:fixed;right:20px;bottom:20px;z-index:5;max-width:min(420px,calc(100vw - 40px));padding:12px 15px;border-radius:12px;background:var(--cyan);color:#06121b;font-weight:900;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateY(0)}kbd{border:1px solid var(--line);border-radius:5px;padding:2px 5px;font-size:10px;color:var(--muted)}
+@media(max-width:1000px){.main-grid{grid-template-columns:1fr}.side{grid-template-columns:repeat(2,minmax(0,1fr))}.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.shell{padding:13px}.header-actions .status,.header-actions .github{display:none}.hero{padding-top:35px}h1{letter-spacing:-1.4px}.lead{font-size:15px}.search-row{flex-wrap:wrap}.search-row input,.search-row .btn{width:100%}.form-grid,.results,.side,.resource-grid{grid-template-columns:1fr}.panel{padding:14px}.section-heading{align-items:flex-start;flex-direction:column}.metrics{gap:6px}.metric{padding:9px}.metric strong{font-size:17px}.metric span{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
+<div id="legalGate" class="legal-gate" role="dialog" aria-modal="true" aria-labelledby="legalTitle"><div class="legal-card"><div class="legal-icon">⚠</div><p class="mini-label">AVISO DE USO RESPONSÁVEL</p><h2 id="legalTitle">Antes de continuar</h2><p>Esta ferramenta prepara links para pesquisas em fontes abertas. Não confirma identidades, não acessa contas privadas e não substitui a verificação independente.</p><p>Você é responsável pelas suas próprias ações e pelo uso que fizer dos resultados. O criador não incentiva atividades ilegais nem pode controlar ações de terceiros. Este aviso não elimina responsabilidades previstas em lei.</p><label class="legal-check"><input id="legalAccept" type="checkbox"> Li e estou ciente de que devo respeitar a privacidade, os termos das plataformas e a legislação aplicável.</label><button id="legalContinue" class="btn primary" type="button" disabled>Continuar para o OSINT PRO ↗</button></div></div>
 <div class="shell">
 <header>
-  <a class="brand" href="#" aria-label="OSINT PRO ULTRA início">
-    <span class="brandmark" aria-hidden="true">O+</span>
-    <span>OSINT <em>PRO ULTRA</em><small>OPEN-SOURCE RESEARCH WORKSPACE</small></span>
-  </a>
-  <div class="header-actions">
-    <span class="status">● SOMENTE FONTES ABERTAS</span>
-    <button class="btn ghost" id="themeButton" type="button">◐ Tema claro</button>
-    <a class="btn github" href="https://github.com/new" target="_blank" rel="noopener noreferrer">↗ Criar repositório</a>
-  </div>
+<a class="brand" href="#" aria-label="OSINT PRO ULTRA início"><span class="brandmark" aria-hidden="true">O+</span><span>OSINT <em>PRO ULTRA</em><small>OPEN-SOURCE RESEARCH WORKSPACE</small></span></a>
+<div class="header-actions"><span class="status">● SOMENTE FONTES ABERTAS</span><div class="theme-tools"><select id="paletteSelect" aria-label="Escolher paleta de cores"><option value="cyan">Ciano Pro</option><option value="violet">Violeta</option><option value="red">Vermelho</option><option value="green">Esmeralda</option><option value="gold">Dourado</option><option value="pink">Rosa</option><option value="blue">Azul elétrico</option></select><label class="btn ghost" for="accentPicker" title="Escolher cor personalizada">🎨</label><input id="accentPicker" type="color" value="#62f1dc" aria-label="Escolher cor personalizada"><button class="btn ghost" id="themeButton" type="button">◐ Claro/escuro</button></div><a class="btn github" href="https://github.com/new" target="_blank" rel="noopener noreferrer">↗ Criar repositório</a></div>
 </header>
-
 <main>
 <section class="hero">
-  <div class="eyebrow"><span class="pulse"></span> pesquisa aberta · análise · organização</div>
-  <h1>Mais contexto.<br><span class="gradient">Pesquisa mais inteligente.</span></h1>
-  <p class="lead">Uma central para montar pesquisas em buscadores e plataformas públicas, organizar fontes e exportar consultas. Tudo em um único arquivo HTML, sem instalar dependências.</p>
-  <div class="hero-tags">
-    <span>HTML único</span><span>Responsivo</span><span>Sem servidor</span>
-    <span>Exportação JSON</span><span>Atalhos de teclado</span>
-  </div>
+<div class="eyebrow"><span class="pulse"></span> pesquisa aberta · análise · organização</div>
+<h1>Mais contexto.<br><span class="gradient">Pesquisa mais inteligente.</span></h1>
+<p class="lead">Uma central para montar pesquisas em buscadores e plataformas públicas, organizar fontes e exportar sua lista de consultas. Tudo em um único arquivo HTML, sem instalar dependências.</p>
+<div class="hero-tags"><span>HTML único</span><span>Responsivo</span><span>Sem servidor</span><span>Exportação JSON</span><span>Atalhos de teclado</span></div>
 </section>
-
 <div class="main-grid">
 <section class="panel" aria-labelledby="searchHeading">
-  <div class="panel-heading">
-    <div><h2 id="searchHeading">Central de pesquisa</h2><p>Digite um termo para preparar consultas em fontes externas.</p></div>
-    <span class="mini-label">MÓDULO 01</span>
-  </div>
-  <form id="searchForm" class="search-form">
-    <div class="search-row">
-      <input id="searchTerm" name="searchTerm" maxlength="200" autocomplete="off" placeholder="Nome, username, domínio, organização ou assunto..." aria-label="Termo de pesquisa" required>
-      <button class="btn primary" type="submit">Gerar pesquisas ↗</button>
-    </div>
-    <div class="form-grid">
-      <div class="field">
-        <label for="searchType">Modelo de pesquisa</label>
-        <select id="searchType">
-          <option value="general">Pesquisa geral</option>
-          <option value="username">Username / apelido</option>
-          <option value="domain">Domínio / site</option>
-          <option value="github">GitHub / desenvolvimento</option>
-          <option value="documents">Documentos públicos</option>
-          <option value="news">Notícias e menções</option>
-          <option value="email">E-mail em fontes públicas</option>
-          <option value="phone">Telefone em páginas públicas</option>
-          <option value="ip">IP / endereço de rede</option>
-          <option value="url">URL / domínio técnico</option>
-          <option value="company">Empresa / organização</option>
-          <option value="hash">Hash / indicador técnico</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="region">Região preferida</label>
-        <select id="region">
-          <option value="auto">Automática</option>
-          <option value="br">Brasil · português</option>
-          <option value="us">Internacional · inglês</option>
-        </select>
-      </div>
-    </div>
-    <div class="filters">
-      <strong>Fontes:</strong>
-      <label><input type="checkbox" name="source" value="web" checked> Web</label>
-      <label><input type="checkbox" name="source" value="github" checked> GitHub</label>
-      <label><input type="checkbox" name="source" value="social" checked> Plataformas</label>
-      <label><input type="checkbox" name="source" value="docs" checked> Documentos</label>
-      <label><input type="checkbox" name="source" value="news" checked> Notícias</label>
-      <label><input type="checkbox" name="source" value="technical" checked> Fontes técnicas</label>
-    </div>
-  </form>
-
-  <div class="quick" aria-label="Modelos rápidos">
-    <button class="chip" type="button" data-mode="username" data-term="exemplo_username">⌁ Username</button>
-    <button class="chip" type="button" data-mode="domain" data-term="exemplo.com">◎ Domínio</button>
-    <button class="chip" type="button" data-mode="github" data-term="projeto open source">⌘ Projeto público</button>
-    <button class="chip" type="button" data-mode="documents" data-term="relatório público">▤ Documentos</button>
-    <button class="chip" type="button" data-mode="news" data-term="tema de interesse">◷ Notícias</button>
-    <button class="chip" type="button" data-mode="email" data-term="exemplo@dominio.com">✉ E-mail público</button>
-    <button class="chip" type="button" data-mode="ip" data-term="8.8.8.8">⌁ IP técnico</button>
-  </div>
-
-  <div class="metrics">
-    <div class="metric"><strong id="metricLinks">0</strong><span>consultas preparadas</span></div>
-    <div class="metric"><strong>6</strong><span>grupos de fontes</span></div>
-    <div class="metric"><strong>0</strong><span>servidores próprios</span></div>
-  </div>
+<div class="panel-heading"><div><h2 id="searchHeading">Central de pesquisa</h2><p>Digite um termo para preparar consultas em fontes externas.</p></div><span class="mini-label">MÓDULO 01</span></div>
+<form id="searchForm" class="search-form">
+<div class="search-row"><input id="searchTerm" name="searchTerm" maxlength="200" autocomplete="off" placeholder="Digite o nome completo, variações, username ou outro termo..." aria-label="Termo de pesquisa" required><button class="btn primary" type="submit">Gerar pesquisas ↗</button></div>
+<div class="form-grid"><div class="field"><label for="searchType">Tipo de pesquisa</label><select id="searchType"><option value="name">Nome / pessoa pública</option><option value="username">Username / apelido</option><option value="general">Pesquisa geral</option><option value="domain">Domínio / site</option></select></div><div class="field"><label for="region">Região</label><select id="region"><option value="br">Brasil / português</option><option value="global">Global</option></select></div></div>
+<div class="filters"><strong>Fontes:</strong><label><input type="checkbox" name="source" value="web" checked> Web</label><label><input type="checkbox" name="source" value="social" checked> Redes públicas</label><label><input type="checkbox" name="source" value="dev"> Tecnologia</label><label><input type="checkbox" name="source" value="news" checked> Notícias</label><label><input type="checkbox" name="source" value="technical"> Domínios / técnicas</label></div>
+</form>
+<div class="quick"><button class="chip" type="button" data-term="nome completo" data-mode="name">Nome completo</button><button class="chip" type="button" data-term="@username" data-mode="username">Username</button><button class="chip" type="button" data-term="nome OR apelido" data-mode="name">Variações do nome</button><button class="chip" type="button" data-term="site:linkedin.com/in/" data-mode="general">Perfis profissionais</button></div>
+<div class="metrics"><div class="metric"><strong id="metricLinks">0</strong><span>links preparados</span></div><div class="metric"><strong>5</strong><span>grupos de fontes</span></div><div class="metric"><strong>200</strong><span>caracteres por termo</span></div></div>
+<div class="section" id="resultsSection"><div class="section-heading"><div><h2>Consultas geradas</h2><p id="resultsHint">Seus links aparecerão aqui depois da pesquisa.</p></div><div class="toolbar"><button class="btn" id="copyAll" type="button" disabled>Copiar tudo</button><button class="btn" id="exportJson" type="button" disabled>Exportar JSON</button><button class="btn ghost" id="clearResults" type="button">Limpar</button></div></div><div class="results" id="results"><div class="empty">Digite um termo e clique em “Gerar pesquisas”.</div></div></div>
 </section>
-
 <aside class="side">
-  <section class="panel">
-    <div class="panel-heading">
-      <div><h3>Fluxo de trabalho</h3><p>Uma rotina simples e verificável.</p></div>
-      <span class="mini-label">GUIA</span>
-    </div>
-    <div class="step"><span class="step-num">01</span><div><strong>Defina o contexto</strong><p>Use termos relevantes e considere grafias alternativas.</p></div></div>
-    <div class="step"><span class="step-num">02</span><div><strong>Verifique a origem</strong><p>Abra o resultado original e confira data, autoria e contexto.</p></div></div>
-    <div class="step"><span class="step-num">03</span><div><strong>Compare evidências</strong><p>Procure confirmação independente antes de concluir algo.</p></div></div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-heading">
-      <div><h3>Histórico da sessão</h3><p>Temporário; não é salvo em servidor.</p></div>
-      <button class="btn ghost" id="clearHistory" type="button">Limpar</button>
-    </div>
-    <div class="history-list" id="historyList"><div class="empty">Nenhuma pesquisa nesta sessão.</div></div>
-  </section>
+<section class="panel"><div class="panel-heading"><div><h3>Fluxo de trabalho</h3><p>Organize sua pesquisa em etapas.</p></div><span class="mini-label">GUIA</span></div><div class="step"><span class="step-num">01</span><div><strong>Defina o termo</strong><p>Use grafias e apelidos que você tenha motivo legítimo para pesquisar.</p></div></div><div class="step"><span class="step-num">02</span><div><strong>Compare fontes</strong><p>Abra mais de um buscador e confira datas e contexto.</p></div></div><div class="step"><span class="step-num">03</span><div><strong>Verifique antes de concluir</strong><p>Nomes iguais não significam que seja a mesma pessoa.</p></div></div></section>
+<section class="panel"><div class="panel-heading"><div><h3>Histórico da sessão</h3><p>Últimos termos pesquisados nesta aba.</p></div><button class="btn ghost" id="clearHistory" type="button">Limpar</button></div><div class="history-list" id="historyList"><div class="empty">Nenhuma pesquisa nesta sessão.</div></div></section>
+<section class="panel"><div class="panel-heading"><div><h3>Notas do caso</h3><p>Registre contexto sem tratar suposições como fatos.</p></div></div><div class="field"><label for="caseTitle">Título</label><input id="caseTitle" maxlength="100" placeholder="Ex.: Pesquisa de fonte pública"></div><div class="field" style="margin-top:10px"><label for="caseStatus">Estado</label><select id="caseStatus"><option>Em andamento</option><option>Concluído</option><option>Requer verificação</option></select></div><div class="field" style="margin-top:10px"><label for="caseNotes">Notas</label><textarea id="caseNotes" rows="4" maxlength="3000" placeholder="Anote links, datas e pontos que precisam ser confirmados..." style="width:100%;resize:vertical;padding:12px;border-radius:11px;background:var(--bg);color:var(--text);border:1px solid var(--line)"></textarea></div><div class="toolbar" style="margin-top:10px"><button class="btn" id="saveNotes" type="button">Preparar notas</button><button class="btn" id="downloadNotes" type="button">Baixar notas</button><button class="btn ghost" id="clearNotes" type="button">Limpar</button></div><p id="notesStatus" style="color:var(--muted);font-size:11px;margin-bottom:0">As notas ficam nesta aba até você sair. Baixe uma cópia para guardar.</p></section>
 </aside>
 </div>
-
-<section class="section" id="resultsSection">
-  <div class="section-heading">
-    <div><h2>Consultas preparadas</h2><p id="resultsHint">Gere uma pesquisa para ver os links agrupados por fonte.</p></div>
-    <div class="toolbar">
-      <button class="btn" id="copyAll" type="button" disabled>▣ Copiar lista</button>
-      <button class="btn" id="exportJson" type="button" disabled>⇩ Exportar JSON</button>
-      <button class="btn ghost" id="clearResults" type="button">Limpar resultados</button>
-    </div>
-  </div>
-  <div class="results" id="results" aria-live="polite"><div class="empty">Aguardando termo de pesquisa.</div></div>
-</section>
-
-<section class="section">
-  <div class="section-heading"><div><h2>Atalhos para fontes públicas</h2><p>Serviços externos úteis para começar uma pesquisa.</p></div></div>
-  <div class="resource-grid">
-    <article class="resource"><div class="resource-icon">G</div><h3>Google Search</h3><p>Pesquisa geral de páginas indexadas.</p><a href="https://www.google.com/" target="_blank" rel="noopener noreferrer">Abrir Google ↗</a></article>
-    <article class="resource"><div class="resource-icon">B</div><h3>Bing</h3><p>Buscador alternativo para comparar resultados.</p><a href="https://www.bing.com/" target="_blank" rel="noopener noreferrer">Abrir Bing ↗</a></article>
-    <article class="resource"><div class="resource-icon">D</div><h3>DuckDuckGo</h3><p>Outra opção de pesquisa aberta.</p><a href="https://duckduckgo.com/" target="_blank" rel="noopener noreferrer">Abrir DuckDuckGo ↗</a></article>
-    <article class="resource"><div class="resource-icon">GH</div><h3>GitHub</h3><p>Repositórios, perfis e código públicos.</p><a href="https://github.com/search" target="_blank" rel="noopener noreferrer">Explorar GitHub ↗</a></article>
-    <article class="resource"><div class="resource-icon">YT</div><h3>YouTube</h3><p>Vídeos e canais públicos.</p><a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">Abrir YouTube ↗</a></article>
-    <article class="resource"><div class="resource-icon">IA</div><h3>Internet Archive</h3><p>Acervo digital público e páginas arquivadas.</p><a href="https://archive.org/" target="_blank" rel="noopener noreferrer">Abrir Archive ↗</a></article>
-  </div>
-</section>
-
-<section class="section" id="technicalTools">
-  <div class="section-heading"><div><h2>Ferramentas técnicas públicas</h2><p>Atalhos para verificar domínios, DNS, certificados e reputação. Os serviços externos recebem a consulta ao serem abertos.</p></div><span class="mini-label">MÓDULO 02</span></div>
-  <div class="resource-grid">
-    <article class="resource"><div class="resource-icon">RD</div><h3>ICANN Lookup / RDAP</h3><p>Consultar dados públicos de registro de domínio.</p><a href="https://lookup.icann.org/" target="_blank" rel="noopener noreferrer">Abrir consulta ↗</a></article>
-    <article class="resource"><div class="resource-icon">DNS</div><h3>DNS Checker</h3><p>Comparar registros DNS publicados para um domínio.</p><a href="https://dnschecker.org/" target="_blank" rel="noopener noreferrer">Ver DNS ↗</a></article>
-    <article class="resource"><div class="resource-icon">CT</div><h3>Certificate Transparency</h3><p>Pesquisar certificados TLS emitidos publicamente.</p><a href="https://crt.sh/" target="_blank" rel="noopener noreferrer">Abrir crt.sh ↗</a></article>
-    <article class="resource"><div class="resource-icon">URL</div><h3>urlscan.io</h3><p>Consultar análises públicas de URLs. Evite enviar links privados ou sensíveis.</p><a href="https://urlscan.io/" target="_blank" rel="noopener noreferrer">Abrir urlscan ↗</a></article>
-    <article class="resource"><div class="resource-icon">VT</div><h3>VirusTotal</h3><p>Consultar reputação pública de arquivos, URLs, domínios ou IPs.</p><a href="https://www.virustotal.com/gui/home/search" target="_blank" rel="noopener noreferrer">Abrir VirusTotal ↗</a></article>
-    <article class="resource"><div class="resource-icon">W</div><h3>Wayback Machine</h3><p>Ver versões arquivadas de páginas públicas.</p><a href="https://web.archive.org/" target="_blank" rel="noopener noreferrer">Consultar arquivo ↗</a></article>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-heading">
-    <div><h2>Caderno de investigação</h2><p>Anote hipóteses e fontes para organizar a sessão. As notas ficam apenas nesta aba e não são enviadas.</p></div>
-    <div class="toolbar"><button class="btn" id="downloadNotes" type="button">⇩ Baixar notas</button><button class="btn ghost" id="clearNotes" type="button">Limpar notas</button></div>
-  </div>
-  <div class="panel">
-    <div class="form-grid">
-      <div class="field"><label for="caseTitle">Título do caso / pesquisa</label><input id="caseTitle" maxlength="120" placeholder="Ex.: análise de domínio público"></div>
-      <div class="field"><label for="caseStatus">Status</label><select id="caseStatus"><option>Em andamento</option><option>Aguardando confirmação</option><option>Concluído</option><option>Descartado</option></select></div>
-    </div>
-    <div class="field" style="margin-top:12px">
-      <label for="caseNotes">Notas e fontes verificadas</label>
-      <textarea id="caseNotes" rows="5" maxlength="10000" placeholder="Registre URLs públicas, data de acesso, contexto e o que ainda precisa ser confirmado." style="width:100%;resize:vertical;font:inherit"></textarea>
-    </div>
-    <div class="toolbar" style="margin-top:10px">
-      <button class="btn primary" id="saveNotes" type="button">Salvar nesta sessão</button>
-      <span id="notesStatus" style="align-self:center;color:var(--muted);font-size:12px">Ainda não salvo.</span>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-heading"><div><h2>Checklist de verificação</h2><p>Use antes de tirar conclusões ou compartilhar um resultado.</p></div></div>
-  <div class="panel" id="checklist">
-    <div class="form-grid">
-      <label><input type="checkbox" class="checkitem"> Confirmei a fonte original e a data.</label>
-      <label><input type="checkbox" class="checkitem"> Comparei com uma segunda fonte independente.</label>
-      <label><input type="checkbox" class="checkitem"> Verifiquei se o nome pode pertencer a homônimos.</label>
-      <label><input type="checkbox" class="checkitem"> Separei fatos confirmados de hipóteses.</label>
-      <label><input type="checkbox" class="checkitem"> Evitei registrar dados pessoais desnecessários.</label>
-      <label><input type="checkbox" class="checkitem"> Respeitei os termos e a legislação aplicável.</label>
-    </div>
-    <p id="checkProgress" style="color:var(--muted);font-size:12px;margin:14px 0 0">0 de 6 itens concluídos.</p>
-  </div>
-</section>
-
-<div class="notice">
-  <strong>Uso responsável e limites:</strong> este arquivo apenas gera links de pesquisa.
-  Não faz scraping, não acessa contas privadas, não contorna login ou CAPTCHA e não confirma identidade.
-  Um resultado pode pertencer a outra pessoa ou estar desatualizado. Use informações públicas de forma legal,
-  respeite os termos dos serviços e evite assédio, perseguição ou exposição de dados pessoais.
-</div>
+<section class="section"><div class="section-heading"><div><h2>Fontes úteis</h2><p>Serviços externos para ampliar a pesquisa de informações públicas.</p></div></div><div class="resource-grid">
+<article class="resource"><div class="resource-icon">WEB</div><h3>Google</h3><p>Pesquise nomes, frases, páginas e menções públicas.</p><a href="https://www.google.com" target="_blank" rel="noopener noreferrer">Abrir Google ↗</a></article>
+<article class="resource"><div class="resource-icon">B</div><h3>Bing</h3><p>Compare os resultados de outro mecanismo de busca.</p><a href="https://www.bing.com" target="_blank" rel="noopener noreferrer">Abrir Bing ↗</a></article>
+<article class="resource"><div class="resource-icon">DDG</div><h3>DuckDuckGo</h3><p>Outra opção de pesquisa na web pública.</p><a href="https://duckduckgo.com" target="_blank" rel="noopener noreferrer">Abrir DuckDuckGo ↗</a></article>
+<article class="resource"><div class="resource-icon">NEWS</div><h3>Google Notícias</h3><p>Pesquise cobertura jornalística e entrevistas.</p><a href="https://news.google.com" target="_blank" rel="noopener noreferrer">Abrir notícias ↗</a></article>
+<article class="resource"><div class="resource-icon">GH</div><h3>GitHub</h3><p>Encontre perfis e repositórios públicos de tecnologia.</p><a href="https://github.com/search" target="_blank" rel="noopener noreferrer">Abrir GitHub ↗</a></article>
+<article class="resource"><div class="resource-icon">IC</div><h3>ICANN Lookup</h3><p>Consulte informações públicas de registro de domínios.</p><a href="https://lookup.icann.org" target="_blank" rel="noopener noreferrer">Abrir ICANN ↗</a></article>
+<article class="resource"><div class="resource-icon">VT</div><h3>VirusTotal</h3><p>Consulte a reputação pública de arquivos, domínios e URLs.</p><a href="https://www.virustotal.com" target="_blank" rel="noopener noreferrer">Abrir VirusTotal ↗</a></article>
+<article class="resource"><div class="resource-icon">URL</div><h3>urlscan.io</h3><p>Veja análises públicas de sites quando disponíveis.</p><a href="https://urlscan.io" target="_blank" rel="noopener noreferrer">Abrir urlscan.io ↗</a></article>
+<article class="resource"><div class="resource-icon">DNS</div><h3>DNSChecker</h3><p>Consulte registros DNS públicos de um domínio.</p><a href="https://dnschecker.org" target="_blank" rel="noopener noreferrer">Abrir DNSChecker ↗</a></article>
+</div></section>
+<section class="section"><div class="panel"><div class="panel-heading"><div><h2>Checklist de verificação</h2><p>Use uma rotina consistente antes de tirar conclusões.</p></div></div><div class="form-grid"><label><input class="checkitem" type="checkbox"> Conferi a data e a origem.</label><label><input class="checkitem" type="checkbox"> Comparei fontes independentes.</label><label><input class="checkitem" type="checkbox"> Separei fatos de hipóteses.</label><label><input class="checkitem" type="checkbox"> Evitei expor dados pessoais desnecessários.</label></div><p id="checkProgress" style="color:var(--muted);font-size:12px">0 de 4 itens concluídos.</p></div></section>
+<div class="notice"><strong>Uso responsável:</strong> esta página organiza links de pesquisa e não fornece resultados verificados. Use apenas informações acessíveis legalmente, respeite a privacidade e as regras dos serviços consultados. O desenvolvedor não controla ações de terceiros; este aviso não elimina responsabilidades previstas em lei.</div>
+<footer><span>© <span id="currentYear"></span> OSINT PRO ULTRA · Pesquisa responsável em fontes abertas</span><span>Feito para uso responsável · Arquivo HTML único</span></footer>
 </main>
-
-<footer>
-  <span>© <span id="currentYear"></span> OSINT PRO ULTRA</span>
-  <span>Um único arquivo · sem bibliotecas externas · sem backend</span>
-  <span><kbd>Ctrl</kbd> + <kbd>K</kbd> foca a pesquisa</span>
-</footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 <script>
-"use strict";
-
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const form = $("#searchForm");
-const termInput = $("#searchTerm");
-const resultsBox = $("#results");
-const toast = $("#toast");
-
-let generatedLinks = [];
-let historyItems = [];
-let toastTimer;
-
-const enc = value => encodeURIComponent(value);
-const google = query => `https://www.google.com/search?q=${enc(query)}`;
-const bing = query => `https://www.bing.com/search?q=${enc(query)}`;
-const duck = query => `https://duckduckgo.com/?q=${enc(query)}`;
-const github = (query, type) => `https://github.com/search?q=${enc(query)}&type=${type}`;
-
-function notify(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
+const form=$("#searchForm"),termInput=$("#searchTerm"),resultsBox=$("#results"),toast=$("#toast");
+let generatedLinks=[],historyItems=[];
+function notify(message){toast.textContent=message;toast.classList.add("show");clearTimeout(notify.timer);notify.timer=setTimeout(()=>toast.classList.remove("show"),2400)}
+function cleanTerm(value){return value.trim().replace(/\s+/g," ").slice(0,200)}
+function enc(value){return encodeURIComponent(value)}
+function google(q){return "https://www.google.com/search?q="+enc(q)}
+function bing(q){return "https://www.bing.com/search?q="+enc(q)}
+function duck(q){return "https://duckduckgo.com/?q="+enc(q)}
+function selectedSources(){return new Set($$('input[name="source"]:checked').map(el=>el.value))}
+function createQueries(term,sources,mode,region){
+ const links=[],q=cleanTerm(term),isName=mode==="name",handle=q.replace(/^@/,""),exact=`"${q}"`;
+ const add=(name,icon,category,description,url)=>links.push({name,icon,category,description,url});
+ if(sources.has("web")){
+  add("Google · pesquisa ampla","G","Web","Termo sem aspas para ampliar correspondências",google(q));
+  add("Google · frase exata","G+","Web","Procura a expressão exata",google(exact));
+  add("Bing · pesquisa ampla","B","Web","Comparação de resultados",bing(q));
+  add("DuckDuckGo","DDG","Web","Busca alternativa na web",duck(q));
+  add("Google · variações e menções","VAR","Web","Combinações com variações de nome",google(isName?`"${q}" OR "${q.replace(/\s+/g,"")}"`:`${q} OR "${q}"`));
+  add("Google · PDFs públicos","PDF","Web","Documentos PDF indexados publicamente",google(`${q} filetype:pdf`));
+  add("Google · documentos públicos","DOC","Web","Documentos DOC e DOCX indexados",google(`${q} (filetype:doc OR filetype:docx)`));
+  add("Google · páginas por título","T","Web","Páginas que mencionam o termo no título",google(`intitle:${q}`));
+ }
+ if(sources.has("social")){
+  add("Instagram · busca pública","IG","Plataformas","Páginas públicas indexadas",google(`site:instagram.com ${handle}`));
+  add("TikTok · busca pública","TT","Plataformas","Páginas e vídeos públicos indexados",google(`site:tiktok.com ${handle}`));
+  add("Facebook · busca pública","FB","Plataformas","Páginas públicas indexadas",google(`site:facebook.com ${handle}`));
+  add("X · busca pública","X","Plataformas","Publicações públicas indexadas",google(`site:x.com ${handle}`));
+ }
+ if(sources.has("dev")){
+  add("GitHub · usuários","GH","Tecnologia","Perfis públicos de desenvolvedores",`https://github.com/search?q=${enc(handle)}&type=users`);
+  add("GitHub · repositórios","GH+","Tecnologia","Repositórios e projetos públicos",`https://github.com/search?q=${enc(q)}&type=repositories`);
+  add("Stack Overflow","SO","Tecnologia","Perfis e publicações públicas",google(`site:stackoverflow.com/users ${q}`));
+  add("Reddit","R","Tecnologia","Publicações públicas indexadas",google(`site:reddit.com ${q}`));
+ }
+ if(sources.has("technical")){
+  const raw=cleanTerm(term);
+  const host=raw.replace(/^https?:\/\//i,"").replace(/^www\./i,"").split(/[\/?#]/)[0];
+  add("ICANN Lookup","RD","Técnicas","Consulta de registro de domínio",`https://lookup.icann.org/en/lookup?name=${enc(host)}`);
+  add("crt.sh","CT","Técnicas","Certificados públicos associados ao domínio",`https://crt.sh/?q=${enc("%25"+host)}`);
+  add("DNSChecker","DNS","Técnicas","Consulta pública de registros DNS",`https://dnschecker.org/#A/${enc(host)}`);
+  add("VirusTotal","VT","Técnicas","Reputação pública do indicador",`https://www.virustotal.com/gui/search/${enc(raw)}`);
+  add("urlscan.io","URL","Técnicas","Buscar análises públicas existentes",`https://urlscan.io/search/#${enc(host)}`);
+ }
+ if(sources.has("news")){
+  const nr=region==="br"?"&hl=pt-BR&gl=BR&ceid=BR:pt-419":"";
+  add("Google Notícias","N","Notícias","Cobertura e menções recentes",`https://news.google.com/search?q=${enc(mode==="name"?`"${term}"`:term)}${nr}`);
+  add("Bing Notícias","BN","Notícias","Comparar cobertura em outra fonte",`https://www.bing.com/news/search?q=${enc(mode==="name"?`"${term}"`:term)}`);
+  if(mode==="name")add("Google · notícias e entrevistas","INT","Notícias","Entrevistas e citações públicas",google(`"${term}" (notícia OR entrevista OR reportagem)`));
+ }
+ return links
 }
-
-function selectedSources() {
-  return new Set($$('input[name="source"]:checked').map(el => el.value));
+function renderQueries(links){
+ resultsBox.replaceChildren();$("#metricLinks").textContent=String(links.length);$("#copyAll").disabled=$("#exportJson").disabled=links.length===0;
+ if(!links.length){const e=document.createElement("div");e.className="empty";e.textContent="Nenhuma fonte selecionada. Marque pelo menos uma categoria.";resultsBox.append(e);$("#resultsHint").textContent="Selecione uma ou mais categorias e tente novamente.";return}
+ const frag=document.createDocumentFragment();
+ for(const item of links){const card=document.createElement("article");card.className="result";const top=document.createElement("div");top.className="result-top";const icon=document.createElement("div");icon.className="resource-icon";icon.textContent=item.icon;icon.setAttribute("aria-hidden","true");const title=document.createElement("div");title.className="result-title";const name=document.createElement("strong");name.textContent=item.name;const detail=document.createElement("small");detail.textContent=`${item.category} · ${item.description}`;title.append(name,detail);top.append(icon,title);const actions=document.createElement("div");actions.className="result-actions";const open=document.createElement("a");open.href=item.url;open.target="_blank";open.rel="noopener noreferrer";open.textContent="Abrir pesquisa ↗";const copy=document.createElement("button");copy.type="button";copy.className="btn";copy.textContent="Copiar URL";copy.addEventListener("click",()=>copyText(item.url,"URL copiada."));actions.append(open,copy);card.append(top,actions);frag.append(card)}
+ resultsBox.append(frag);$("#resultsHint").textContent=`${links.length} links preparados. Os resultados são exibidos nos sites de origem, não dentro deste painel.`
 }
-
-function cleanTerm(raw) {
-  return String(raw || "").trim().replace(/\s+/g, " ");
-}
-
-function queryFor(term, mode) {
-  const clean = cleanTerm(term);
-
-  if (mode === "username") return `"${clean.replace(/^@/, "")}"`;
-  if (mode === "domain") return `site:${clean.replace(/^https?:\/\//i, "").replace(/\/.*$/, "")}`;
-  if (mode === "documents") return `${clean} filetype:pdf`;
-  if (mode === "news") return `${clean} notícias OR reportagem`;
-  if (mode === "email" || mode === "phone") return `"${clean}"`;
-  if (mode === "ip") return `${clean} (IP OR ASN OR geolocation)`;
-  if (mode === "url") return clean.replace(/^https?:\/\//i, "").replace(/\/.*$/, "");
-  if (mode === "company") return `"${clean}" (empresa OR CNPJ OR organização)`;
-  if (mode === "hash") return `"${clean}" (hash OR malware OR indicator)`;
-  return clean;
-}
-
-function createQueries(term, sources, mode, region) {
-  const base = queryFor(term, mode);
-  const regionQuery = region === "br" ? "&hl=pt-BR&gl=BR" :
-                      region === "us" ? "&hl=en&gl=US" : "";
-  const links = [];
-  const add = (name, icon, category, description, url) =>
-    links.push({ name, icon, category, description, url });
-
-  if (sources.has("web")) {
-    add("Google", "G", "Web", "Pesquisa geral indexada", google(base) + regionQuery);
-    add("Bing", "B", "Web", "Buscador alternativo", bing(base));
-    add("DuckDuckGo", "D", "Web", "Pesquisa complementar", duck(base));
-  }
-
-  if (sources.has("github")) {
-    add("GitHub · usuários", "GH", "GitHub", "Perfis públicos correspondentes", github(term.replace(/^@/, ""), "users"));
-    add("GitHub · repositórios", "{ }", "GitHub", "Projetos públicos", github(term, "repositories"));
-    add("GitHub · código", "</>", "GitHub", "Código pesquisável na plataforma", github(term, "code"));
-  }
-
-  if (sources.has("social")) {
-    add("Reddit", "R", "Plataformas", "Páginas públicas indexadas", google(`site:reddit.com ${base}`));
-    add("YouTube", "YT", "Plataformas", "Vídeos e canais relacionados", `https://www.youtube.com/results?search_query=${enc(term)}`);
-    add("Mastodon · busca web", "M", "Plataformas", "Resultados públicos indexados", google(`${term.replace(/^@/, "")} site:mastodon.social OR site:fosstodon.org`));
-
-    const handle = term.replace(/^@/, "");
-    add("Instagram · busca pública", "IG", "Plataformas", "Páginas indexadas publicamente", google(`site:instagram.com ${handle}`));
-    add("TikTok · busca pública", "TT", "Plataformas", "Páginas e vídeos públicos indexados", google(`site:tiktok.com ${handle}`));
-    add("Facebook · busca pública", "FB", "Plataformas", "Páginas públicas indexadas", google(`site:facebook.com ${handle}`));
-    add("X · busca pública", "X", "Plataformas", "Publicações públicas indexadas", google(`site:x.com ${handle}`));
-  }
-
-  if (sources.has("docs")) {
-    add("PDFs públicos", "PDF", "Documentos", "Documentos PDF indexados", google(`${base} filetype:pdf`));
-    add("Portal gov.br", "BR", "Documentos", "Páginas públicas de gov.br", google(`${base} site:gov.br`));
-    add("Universidades", "EDU", "Documentos", "Materiais em domínios acadêmicos", google(`${base} site:edu.br filetype:pdf`));
-    add("Internet Archive", "IA", "Documentos", "Busca em acervo público", `https://archive.org/search?query=${enc(term)}`);
-  }
-
-  if (sources.has("technical")) {
-    const raw = cleanTerm(term);
-    const host = raw.replace(/^https?:\/\//i, "").replace(/^www\./i, "").split(/[\/?#]/)[0];
-    add("ICANN Lookup", "RD", "Técnicas", "Consulta de registro de domínio", `https://lookup.icann.org/en/lookup?name=${enc(host)}`);
-    add("crt.sh", "CT", "Técnicas", "Certificados públicos associados ao domínio", `https://crt.sh/?q=${enc("%25" + host)}`);
-    add("DNSChecker", "DNS", "Técnicas", "Consulta pública de registros DNS", `https://dnschecker.org/#A/${enc(host)}`);
-    add("VirusTotal", "VT", "Técnicas", "Reputação pública do indicador", `https://www.virustotal.com/gui/search/${enc(raw)}`);
-    add("urlscan.io", "URL", "Técnicas", "Buscar análises públicas existentes", `https://urlscan.io/search/#${enc(host)}`);
-  }
-
-  if (sources.has("news")) {
-    const nr = region === "br" ? "&hl=pt-BR&gl=BR&ceid=BR:pt-419" : "";
-    add("Google Notícias", "N", "Notícias", "Cobertura e menções recentes", `https://news.google.com/search?q=${enc(term)}${nr}`);
-    add("Bing Notícias", "BN", "Notícias", "Comparar cobertura em outra fonte", `https://www.bing.com/news/search?q=${enc(term)}`);
-  }
-
-  return links;
-}
-
-function renderQueries(links) {
-  resultsBox.replaceChildren();
-  $("#metricLinks").textContent = String(links.length);
-  $("#copyAll").disabled = $("#exportJson").disabled = links.length === 0;
-
-  if (!links.length) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "Nenhuma fonte selecionada. Marque pelo menos uma categoria.";
-    resultsBox.append(empty);
-    $("#resultsHint").textContent = "Selecione uma ou mais categorias e tente novamente.";
-    return;
-  }
-
-  const fragment = document.createDocumentFragment();
-
-  for (const item of links) {
-    const card = document.createElement("article");
-    card.className = "result";
-
-    const top = document.createElement("div");
-    top.className = "result-top";
-
-    const icon = document.createElement("div");
-    icon.className = "resource-icon";
-    icon.textContent = item.icon;
-    icon.setAttribute("aria-hidden", "true");
-
-    const title = document.createElement("div");
-    title.className = "result-title";
-
-    const name = document.createElement("strong");
-    name.textContent = item.name;
-
-    const detail = document.createElement("small");
-    detail.textContent = `${item.category} · ${item.description}`;
-
-    title.append(name, detail);
-    top.append(icon, title);
-
-    const actions = document.createElement("div");
-    actions.className = "result-actions";
-
-    const open = document.createElement("a");
-    open.href = item.url;
-    open.target = "_blank";
-    open.rel = "noopener noreferrer";
-    open.textContent = "Abrir pesquisa ↗";
-
-    const copy = document.createElement("button");
-    copy.type = "button";
-    copy.className = "btn";
-    copy.textContent = "Copiar URL";
-    copy.addEventListener("click", () => copyText(item.url, "URL copiada."));
-
-    actions.append(open, copy);
-    card.append(top, actions);
-    fragment.append(card);
-  }
-
-  resultsBox.append(fragment);
-  $("#resultsHint").textContent =
-    `${links.length} links preparados. Os resultados são exibidos nos sites de origem, não dentro deste painel.`;
-}
-
-async function copyText(value, message) {
-  try {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(value);
-    } else {
-      const field = document.createElement("textarea");
-      field.value = value;
-      field.setAttribute("readonly", "");
-      field.style.position = "fixed";
-      field.style.opacity = "0";
-      document.body.append(field);
-      field.select();
-      const ok = document.execCommand("copy");
-      field.remove();
-      if (!ok) throw Error("clipboard unavailable");
-    }
-    notify(message);
-  } catch {
-    notify("Cópia automática indisponível. Copie a URL manualmente.");
-  }
-}
-
-function renderHistory() {
-  const box = $("#historyList");
-  box.replaceChildren();
-
-  if (!historyItems.length) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "Nenhuma pesquisa nesta sessão.";
-    box.append(empty);
-    return;
-  }
-
-  for (const item of historyItems) {
-    const row = document.createElement("div");
-    row.className = "history-item";
-
-    const label = document.createElement("span");
-    label.textContent = `${item.term} · ${item.time}`;
-
-    const repeat = document.createElement("button");
-    repeat.type = "button";
-    repeat.className = "btn";
-    repeat.textContent = "Repetir";
-    repeat.addEventListener("click", () => {
-      termInput.value = item.term;
-      form.requestSubmit();
-      $("#resultsSection").scrollIntoView({ behavior: "smooth" });
-    });
-
-    row.append(label, repeat);
-    box.append(row);
-  }
-}
-
-form.addEventListener("submit", event => {
-  event.preventDefault();
-  const term = cleanTerm(termInput.value);
-
-  if (!term) {
-    termInput.focus();
-    notify("Digite um termo de pesquisa.");
-    return;
-  }
-
-  generatedLinks = createQueries(
-    term,
-    selectedSources(),
-    $("#searchType").value,
-    $("#region").value
-  );
-
-  renderQueries(generatedLinks);
-
-  historyItems = [
-    { term, time: new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" }) },
-    ...historyItems.filter(item => item.term !== term)
-  ].slice(0, 6);
-
-  renderHistory();
-  $("#resultsSection").scrollIntoView({ behavior: "smooth", block: "start" });
-});
-
-$$("[data-term]").forEach(button => {
-  button.addEventListener("click", () => {
-    termInput.value = button.dataset.term;
-    $("#searchType").value = button.dataset.mode;
-    termInput.focus();
-  });
-});
-
-$("#copyAll").addEventListener("click", () => {
-  copyText(
-    generatedLinks.map(item => `${item.name} [${item.category}]\n${item.url}`).join("\n\n"),
-    "Lista copiada."
-  );
-});
-
-$("#exportJson").addEventListener("click", () => {
-  const data = {
-    tool: "OSINT PRO ULTRA",
-    createdAt: new Date().toISOString(),
-    term: cleanTerm(termInput.value),
-    notice: "Este arquivo contém links de pesquisa, não resultados verificados.",
-    links: generatedLinks
-  };
-
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: "application/json;charset=utf-8"
-  });
-
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = "osint-pro-ultra.json";
-  anchor.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  notify("JSON exportado.");
-});
-
-$("#clearResults").addEventListener("click", () => {
-  generatedLinks = [];
-  renderQueries([]);
-  const empty = document.createElement("div");
-  empty.className = "empty";
-  empty.textContent = "Aguardando termo de pesquisa.";
-  resultsBox.replaceChildren(empty);
-  $("#resultsHint").textContent = "Gere uma pesquisa para ver os links agrupados por fonte.";
-  termInput.focus();
-});
-
-$("#clearHistory").addEventListener("click", () => {
-  historyItems = [];
-  renderHistory();
-  notify("Histórico da sessão limpo.");
-});
-
-$("#themeButton").addEventListener("click", () => {
-  const light = document.body.classList.toggle("light");
-  $("#themeButton").textContent = light ? "◑ Tema escuro" : "◐ Tema claro";
-  try {
-    localStorage.setItem("osint-pro-theme", light ? "light" : "dark");
-  } catch {}
-});
-
-try {
-  if (localStorage.getItem("osint-pro-theme") === "light") {
-    document.body.classList.add("light");
-    $("#themeButton").textContent = "◑ Tema escuro";
-  }
-} catch {}
-
-document.addEventListener("keydown", event => {
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
-    event.preventDefault();
-    termInput.focus();
-  }
-  if (event.key === "Escape" && document.activeElement === termInput) {
-    termInput.value = "";
-  }
-});
-
-function notesPayload() {
-  return {
-    tool: "OSINT PRO ULTRA",
-    title: $("#caseTitle").value.trim(),
-    status: $("#caseStatus").value,
-    notes: $("#caseNotes").value,
-    updatedAt: new Date().toISOString(),
-    notice: "Notas locais; não são evidência verificada."
-  };
-}
-
-$("#saveNotes").addEventListener("click", () => {
-  $("#notesStatus").textContent =
-    "Notas preparadas nesta sessão às " +
-    new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" }) + ".";
-  notify("Notas mantidas nesta aba. Baixe um arquivo para guardar uma cópia.");
-});
-
-$("#downloadNotes").addEventListener("click", () => {
-  const data = notesPayload();
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: "application/json;charset=utf-8"
-  });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = "osint-pro-notas.json";
-  anchor.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  notify("Arquivo de notas baixado.");
-});
-
-$("#clearNotes").addEventListener("click", () => {
-  $("#caseTitle").value = "";
-  $("#caseNotes").value = "";
-  $("#caseStatus").selectedIndex = 0;
-  $("#notesStatus").textContent = "Notas limpas.";
-  notify("Campos de notas limpos.");
-});
-
-function updateCheckProgress() {
-  const checks = $$(".checkitem");
-  const done = checks.filter(check => check.checked).length;
-  $("#checkProgress").textContent = `${done} de ${checks.length} itens concluídos.`;
-}
-
-$$(".checkitem").forEach(check => check.addEventListener("change", updateCheckProgress));
-$("#currentYear").textContent = String(new Date().getFullYear());
+async function copyText(value,message){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(value);else{const field=document.createElement("textarea");field.value=value;field.setAttribute("readonly","");field.style.position="fixed";field.style.opacity="0";document.body.append(field);field.select();const ok=document.execCommand("copy");field.remove();if(!ok)throw Error("clipboard unavailable")}notify(message)}catch{notify("Cópia automática indisponível. Copie a URL manualmente.")}}
+function renderHistory(){const box=$("#historyList");box.replaceChildren();if(!historyItems.length){const e=document.createElement("div");e.className="empty";e.textContent="Nenhuma pesquisa nesta sessão.";box.append(e);return}for(const item of historyItems){const row=document.createElement("div");row.className="history-item";const label=document.createElement("span");label.textContent=`${item.term} · ${item.time}`;const repeat=document.createElement("button");repeat.type="button";repeat.className="btn";repeat.textContent="Repetir";repeat.addEventListener("click",()=>{termInput.value=item.term;form.requestSubmit();$("#resultsSection").scrollIntoView({behavior:"smooth"})});row.append(label,repeat);box.append(row)}}
+form.addEventListener("submit",event=>{event.preventDefault();const term=cleanTerm(termInput.value);if(!term){termInput.focus();notify("Digite um termo de pesquisa.");return}generatedLinks=createQueries(term,selectedSources(),$("#searchType").value,$("#region").value);renderQueries(generatedLinks);historyItems=[{term,time:new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})},...historyItems.filter(i=>i.term!==term)].slice(0,6);renderHistory();$("#resultsSection").scrollIntoView({behavior:"smooth",block:"start"})});
+$$("[data-term]").forEach(button=>button.addEventListener("click",()=>{termInput.value=button.dataset.term;$("#searchType").value=button.dataset.mode;termInput.focus()}));
+$("#copyAll").addEventListener("click",()=>copyText(generatedLinks.map(i=>`${i.name} [${i.category}]\n${i.url}`).join("\n\n"),"Lista copiada."));
+$("#exportJson").addEventListener("click",()=>{const data={tool:"OSINT PRO ULTRA",createdAt:new Date().toISOString(),term:cleanTerm(termInput.value),notice:"Este arquivo contém links de pesquisa, não resultados verificados.",links:generatedLinks};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="osint-pro-ultra.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify("JSON exportado.")});
+$("#clearResults").addEventListener("click",()=>{generatedLinks=[];renderQueries([]);const e=document.createElement("div");e.className="empty";e.textContent="Aguardando termo de pesquisa.";resultsBox.replaceChildren(e);$("#resultsHint").textContent="Gere uma pesquisa para ver os links agrupados por fonte.";termInput.focus()});
+$("#clearHistory").addEventListener("click",()=>{historyItems=[];renderHistory();notify("Histórico da sessão limpo.")});
+const palettes={cyan:"#62f1dc",violet:"#b69cff",red:"#ff6b7a",green:"#69e6a6",gold:"#ffd166",pink:"#ff8fce",blue:"#65aaff"};
+function setAccent(color){if(!/^#[0-9a-f]{6}$/i.test(color))return;document.body.style.setProperty("--cyan",color);document.body.style.setProperty("--blue",color);$("#accentPicker").value=color;try{localStorage.setItem("osint-pro-accent",color)}catch{}}
+$("#paletteSelect").addEventListener("change",()=>{const c=palettes[$("#paletteSelect").value];if(c)setAccent(c);try{localStorage.setItem("osint-pro-palette",$("#paletteSelect").value)}catch{}});
+$("#accentPicker").addEventListener("input",e=>{setAccent(e.target.value);$("#paletteSelect").value="custom"});
+$("#themeButton").addEventListener("click",()=>{const light=document.body.classList.toggle("light");$("#themeButton").textContent=light?"◑ Modo escuro":"◐ Modo claro";try{localStorage.setItem("osint-pro-theme",light?"light":"dark")}catch{}});
+try{const savedTheme=localStorage.getItem("osint-pro-theme");if(savedTheme==="light"){document.body.classList.add("light");$("#themeButton").textContent="◑ Modo escuro"}const savedAccent=localStorage.getItem("osint-pro-accent");if(savedAccent)setAccent(savedAccent);const savedPalette=localStorage.getItem("osint-pro-palette");if(savedPalette&&palettes[savedPalette])$("#paletteSelect").value=savedPalette}catch{}
+$("#legalAccept").addEventListener("change",e=>{$("#legalContinue").disabled=!e.target.checked});$("#legalContinue").addEventListener("click",()=>{if(!$("#legalAccept").checked)return;$("#legalGate").classList.add("hidden");try{sessionStorage.setItem("osint-pro-legal-accepted","yes")}catch{}});try{if(sessionStorage.getItem("osint-pro-legal-accepted")==="yes")$("#legalGate").classList.add("hidden")}catch{}
+document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();termInput.focus()}if(event.key==="Escape"&&document.activeElement===termInput)termInput.value=""});
+let notesSaved=false;
+function notesPayload(){return {tool:"OSINT PRO ULTRA",title:$("#caseTitle").value.trim(),status:$("#caseStatus").value,notes:$("#caseNotes").value,updatedAt:new Date().toISOString(),notice:"Notas locais; não são evidência verificada."}}
+$("#saveNotes").addEventListener("click",()=>{notesSaved=true;$("#notesStatus").textContent="Notas preparadas nesta sessão às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+".";notify("Notas mantidas nesta aba. Baixe um arquivo para guardar uma cópia.")});
+$("#downloadNotes").addEventListener("click",()=>{const data=notesPayload();const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="osint-pro-notas.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify("Arquivo de notas baixado.")});
+$("#clearNotes").addEventListener("click",()=>{$("#caseTitle").value="";$("#caseNotes").value="";$("#caseStatus").selectedIndex=0;$("#notesStatus").textContent="Notas limpas.";notesSaved=false;notify("Campos de notas limpos.")});
+function updateCheckProgress(){const checks=$$(".checkitem"),done=checks.filter(c=>c.checked).length;$("#checkProgress").textContent=`${done} de ${checks.length} itens concluídos.`}
+$$(".checkitem").forEach(c=>c.addEventListener("change",updateCheckProgress));
+$("#currentYear").textContent=String(new Date().getFullYear());
 </script>
 </body>
 </html>
